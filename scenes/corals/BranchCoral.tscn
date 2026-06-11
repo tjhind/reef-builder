@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://dxvn5v6n7kpr7"]
+
+[ext_resource type="Texture2D" uid="uid://cqhi37jfkns1f" path="res://assets/branch-coral.png" id="1_hnuyh"]
+
+[node name="BranchCoral" type="Node2D" unique_id=489560770]
+
+[node name="BranchCoralImage" type="Sprite2D" parent="." unique_id=1476663580]
+texture = ExtResource("1_hnuyh")

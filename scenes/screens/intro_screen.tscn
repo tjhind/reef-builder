@@ -1,0 +1,62 @@
+[gd_scene format=3 uid="uid://bc8mku5o5cjdn"]
+
+[ext_resource type="Script" uid="uid://d288ehia81vcs" path="res://scenes/screens/intro_screen.gd" id="1_4firs"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4firs"]
+bg_color = Color(0.45882353, 0.59607846, 0.6, 1)
+
+[node name="IntroScreen" type="Control" unique_id=1635084721]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_4firs")
+
+[node name="Panel" type="Panel" parent="." unique_id=295170339]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_4firs")
+
+[node name="Button" type="Button" parent="Panel" unique_id=1809333780]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -112.5
+offset_top = -153.0
+offset_right = 112.5
+offset_bottom = -33.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_colors/font_color = Color(0.875, 0.875, 0.875, 1)
+theme_override_colors/font_focus_color = Color(0.95, 0.95, 0.95, 1)
+theme_override_colors/font_pressed_color = Color(1, 1, 1, 1)
+theme_override_colors/font_hover_color = Color(0.95, 0.95, 0.95, 1)
+theme_override_colors/font_hover_pressed_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 50
+action_mode = 0
+text = "Start"
+
+[node name="Label" type="Label" parent="Panel" unique_id=110137244]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -235.5
+offset_top = 79.0
+offset_right = 235.5
+offset_bottom = 189.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 80
+text = "Reef Builder"
+horizontal_alignment = 1
+
+[connection signal="pressed" from="Panel/Button" to="." method="_on_button_pressed"]

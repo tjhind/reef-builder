@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://c0fneen67id0f"]
+
+[ext_resource type="Texture2D" uid="uid://dijdcccdds4mk" path="res://assets/sparkles.png" id="1_2l513"]
+
+[node name="Sparkles" type="Node2D" unique_id=431914504]
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=843938038]
+texture = ExtResource("1_2l513")

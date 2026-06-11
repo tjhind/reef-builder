@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://i2y301xap12c"]
+
+[ext_resource type="Texture2D" uid="uid://be63rp47j08es" path="res://assets/deep-sea.png" id="1_l8jvt"]
+
+[node name="DeepSea" type="Node2D" unique_id=292740523]
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=296214714]
+texture = ExtResource("1_l8jvt")

@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://bswyg1u1de10f"]
+
+[ext_resource type="Texture2D" uid="uid://cmblf8sgs20v2" path="res://assets/fan-coral-tile.png" id="1_kv1oj"]
+
+[node name="FanCoral" type="Node2D" unique_id=884030434]
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=103077897]
+texture = ExtResource("1_kv1oj")

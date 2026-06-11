@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://dd7puytefe6ec"]
+
+[ext_resource type="Texture2D" uid="uid://d2d2bxnrr6n5f" path="res://assets/nemo-fish.png" id="1_344pp"]
+
+[node name="NemoFish" type="Node2D" unique_id=1242712466]
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1137527846]
+texture = ExtResource("1_344pp")

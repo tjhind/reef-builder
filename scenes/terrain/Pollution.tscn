@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://c6guj080lfxww"]
+
+[ext_resource type="Texture2D" uid="uid://bomil51plaour" path="res://assets/pollution.png" id="1_rlyfh"]
+
+[node name="Pollution" type="Node2D" unique_id=1947044724]
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1240092606]
+texture = ExtResource("1_rlyfh")

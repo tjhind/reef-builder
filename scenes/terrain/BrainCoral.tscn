@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://k8fqnuix80r1"]
+
+[ext_resource type="Texture2D" uid="uid://cf8fj76b3fvb2" path="res://assets/brain-coral-tile.png" id="1_uexys"]
+
+[node name="BrainCoral" type="Node2D" unique_id=1539435126]
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=13488854]
+texture = ExtResource("1_uexys")
