@@ -1,3 +1,28 @@
 [gd_scene format=3 uid="uid://7jpyods11ako"]
 
-[node name="WinScreen" type="Node2D" unique_id=1856640055]
+[ext_resource type="Script" uid="uid://6b7fd1xwbq5j" path="res://scenes/screens/win_screen.gd" id="1_xjpxm"]
+[ext_resource type="PackedScene" uid="uid://dnnc3eir0nu8b" path="res://scenes/buttons/end_buttons.tscn" id="2_04akm"]
+
+[node name="WinScreen" type="Control" unique_id=1588902026]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_xjpxm")
+
+[node name="ScoreLabel" type="Label" parent="." unique_id=1086207338]
+layout_mode = 0
+offset_right = 948.0
+offset_bottom = 948.0
+
+[node name="EndButtons" parent="ScoreLabel" unique_id=30431467 instance=ExtResource("2_04akm")]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -124.5
+offset_top = -39.5
+offset_right = 124.5
+offset_bottom = 39.5
+grow_horizontal = 2
+grow_vertical = 2

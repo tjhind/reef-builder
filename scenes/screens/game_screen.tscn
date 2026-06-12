@@ -2,11 +2,68 @@
 
 [ext_resource type="Script" uid="uid://c1hgdu24bb1x0" path="res://scenes/screens/game_screen.gd" id="1_5wjna"]
 [ext_resource type="TileSet" uid="uid://ijr8fq7u5o2b" path="res://scenes/terrain/terrain_tileset.tres" id="2_beu7v"]
+[ext_resource type="Texture2D" uid="uid://cw871ih2j3qux" path="res://assets/branch-coral-tile.png" id="2_riit4"]
+[ext_resource type="Texture2D" uid="uid://cf8fj76b3fvb2" path="res://assets/brain-coral-tile.png" id="3_wvjml"]
+[ext_resource type="Texture2D" uid="uid://cmblf8sgs20v2" path="res://assets/fan-coral-tile.png" id="4_xi1he"]
+[ext_resource type="Texture2D" uid="uid://bomil51plaour" path="res://assets/pollution.png" id="5_riit4"]
+[ext_resource type="Script" uid="uid://cbo84185u7d15" path="res://scenes/screens/turn_label.gd" id="7_d7q35"]
+[ext_resource type="Script" uid="uid://8q2me3sn4o5e" path="res://scenes/screens/pollution_label.gd" id="8_ac6br"]
+[ext_resource type="Script" uid="uid://d3ctyb2e76tj6" path="res://scenes/screens/coral_label.gd" id="9_5aqvp"]
 
 [node name="GameScreen" type="Control" unique_id=1897142186]
 layout_mode = 3
-anchors_preset = 0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 script = ExtResource("1_5wjna")
+branching_texture = ExtResource("2_riit4")
+brain_texture = ExtResource("3_wvjml")
+fan_texture = ExtResource("4_xi1he")
+pollution_texture = ExtResource("5_riit4")
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=1853255972]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.8862745, 1, 1, 1)
 
 [node name="TerrainTileMap" type="TileMapLayer" parent="." unique_id=1976445403]
 tile_set = ExtResource("2_beu7v")
+
+[node name="Button" type="Button" parent="." unique_id=247753711]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -13.0
+offset_bottom = 31.0
+grow_horizontal = 0
+text = "i"
+
+[node name="ScorePanel" type="HBoxContainer" parent="." unique_id=418914215]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -93.0
+offset_right = 264.0
+grow_vertical = 0
+
+[node name="CoralLabel" type="Label" parent="ScorePanel" unique_id=1362450456]
+layout_mode = 2
+theme_override_font_sizes/font_size = 37
+script = ExtResource("9_5aqvp")
+
+[node name="PollutionLabel" type="Label" parent="ScorePanel" unique_id=578391336]
+layout_mode = 2
+script = ExtResource("8_ac6br")
+
+[node name="TurnLabel" type="Label" parent="ScorePanel" unique_id=206772757]
+layout_mode = 2
+script = ExtResource("7_d7q35")

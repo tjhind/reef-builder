@@ -30,10 +30,10 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -112.5
-offset_top = -153.0
-offset_right = 112.5
-offset_bottom = -33.0
+offset_left = -116.0
+offset_top = -227.0
+offset_right = 109.0
+offset_bottom = -107.0
 grow_horizontal = 2
 grow_vertical = 0
 theme_override_colors/font_color = Color(0.875, 0.875, 0.875, 1)
@@ -43,7 +43,7 @@ theme_override_colors/font_hover_color = Color(0.95, 0.95, 0.95, 1)
 theme_override_colors/font_hover_pressed_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 50
 action_mode = 0
-text = "Start"
+text = "continue"
 
 [node name="Label" type="Label" parent="Panel" unique_id=110137244]
 layout_mode = 1
@@ -56,7 +56,20 @@ offset_right = 235.5
 offset_bottom = 189.0
 grow_horizontal = 2
 theme_override_font_sizes/font_size = 80
-text = "Reef Builder"
+text = "reef builder"
 horizontal_alignment = 1
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Panel" unique_id=1404054884]
+layout_mode = 0
+offset_left = 232.0
+offset_top = 295.0
+offset_right = 801.0
+offset_bottom = 742.0
+theme_override_font_sizes/normal_font_size = 31
+text = "
+the reef is fading, but hope still spreads beneath the waves.
+
+cultivate coral and help the ocean flourish once more.
+"
 
 [connection signal="pressed" from="Panel/Button" to="." method="_on_button_pressed"]

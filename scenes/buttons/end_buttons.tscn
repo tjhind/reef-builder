@@ -1,0 +1,23 @@
+[gd_scene format=3 uid="uid://dnnc3eir0nu8b"]
+
+[ext_resource type="Script" uid="uid://c272mfb2v0atq" path="res://scenes/buttons/end_buttons.gd" id="1_rrvbl"]
+
+[node name="EndButtons" type="HBoxContainer" unique_id=689516588]
+offset_left = 485.0
+offset_top = 809.0
+offset_right = 596.0
+offset_bottom = 840.0
+size_flags_horizontal = 8
+size_flags_vertical = 8
+script = ExtResource("1_rrvbl")
+
+[node name="RestartButton" type="Button" parent="." unique_id=639348064]
+layout_mode = 2
+text = "Restart"
+
+[node name="QuitButton" type="Button" parent="." unique_id=567341814]
+layout_mode = 2
+text = "Quit"
+
+[connection signal="pressed" from="RestartButton" to="." method="on_restart"]
+[connection signal="pressed" from="QuitButton" to="." method="on_quit"]
