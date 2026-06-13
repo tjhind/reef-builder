@@ -3,22 +3,50 @@
 [ext_resource type="Script" uid="uid://c20ssgy7kbv2x" path="res://scenes/screens/lose_screen.gd" id="1_h8ujx"]
 [ext_resource type="PackedScene" uid="uid://dnnc3eir0nu8b" path="res://scenes/buttons/end_buttons.tscn" id="2_te7av"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_te7av"]
-bg_color = Color(0.6, 0.23137255, 0.6, 1)
-
 [node name="LoseScreen" type="Control" unique_id=152622058]
 layout_mode = 3
-anchors_preset = 0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 script = ExtResource("1_h8ujx")
 
-[node name="Panel" type="Panel" parent="." unique_id=175583962]
+[node name="Panel" type="ColorRect" parent="." unique_id=2032023250]
 layout_mode = 1
-theme_override_styles/panel = SubResource("StyleBoxFlat_te7av")
-
-[node name="ScoreLabel" type="Label" parent="." unique_id=210447006]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 23.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(1, 0.09411765, 1, 1)
 
 [node name="EndButtons" parent="." unique_id=30431467 instance=ExtResource("2_te7av")]
+layout_mode = 1
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = 0.0
+offset_top = -15.5
+offset_right = -13.0
+offset_bottom = 314.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ScoreLabel" type="Label" parent="." unique_id=210447006]
+unique_name_in_owner = true
 layout_mode = 0
+offset_right = 844.0
+offset_bottom = 737.0
+theme_override_font_sizes/font_size = 59
+text = "SCORE"
+
+[node name="Label" type="Label" parent="." unique_id=2141142802]
+layout_mode = 0
+offset_left = 434.0
+offset_top = 121.0
+offset_right = 875.0
+offset_bottom = 204.0
+theme_override_font_sizes/font_size = 60
+text = "Sorry, you lose "

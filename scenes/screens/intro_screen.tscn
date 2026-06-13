@@ -61,10 +61,10 @@ horizontal_alignment = 1
 
 [node name="RichTextLabel" type="RichTextLabel" parent="Panel" unique_id=1404054884]
 layout_mode = 0
-offset_left = 232.0
-offset_top = 295.0
-offset_right = 801.0
-offset_bottom = 742.0
+offset_left = 281.0
+offset_top = 308.0
+offset_right = 850.0
+offset_bottom = 755.0
 theme_override_font_sizes/normal_font_size = 31
 text = "
 the reef is fading, but hope still spreads beneath the waves.

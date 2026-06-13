@@ -5,13 +5,37 @@
 
 [node name="WinScreen" type="Control" unique_id=1588902026]
 layout_mode = 3
-anchors_preset = 0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 script = ExtResource("1_xjpxm")
 
+[node name="ColorRect" type="ColorRect" parent="." unique_id=1792601153]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(1, 0.27450982, 1, 1)
+
 [node name="ScoreLabel" type="Label" parent="." unique_id=1086207338]
-layout_mode = 0
-offset_right = 948.0
-offset_bottom = 948.0
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -390.0
+offset_top = -486.0
+offset_right = 558.0
+offset_bottom = 462.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 90
+text = "Score"
 
 [node name="EndButtons" parent="ScoreLabel" unique_id=30431467 instance=ExtResource("2_04akm")]
 layout_mode = 1
@@ -26,3 +50,13 @@ offset_right = 124.5
 offset_bottom = 39.5
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="Label" type="Label" parent="." unique_id=67296332]
+layout_mode = 0
+offset_left = 354.0
+offset_top = 487.0
+offset_right = 1166.0
+offset_bottom = 1175.0
+theme_override_font_sizes/font_size = 90
+text = "Congrats you win 
+"
