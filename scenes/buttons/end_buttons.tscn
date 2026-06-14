@@ -1,6 +1,23 @@
 [gd_scene format=3 uid="uid://dnnc3eir0nu8b"]
 
 [ext_resource type="Script" uid="uid://c272mfb2v0atq" path="res://scenes/buttons/end_buttons.gd" id="1_rrvbl"]
+[ext_resource type="FontFile" uid="uid://q0nk4vqg262s" path="res://fonts/Garet-Book.ttf" id="1_s773y"]
+
+[sub_resource type="Theme" id="Theme_bj7cl"]
+default_font = ExtResource("1_s773y")
+default_font_size = 50
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_s773y"]
+content_margin_left = 30.0
+content_margin_top = 30.0
+content_margin_right = 30.0
+content_margin_bottom = 30.0
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bj7cl"]
 
 [node name="EndButtons" type="HBoxContainer" unique_id=689516588]
 offset_left = 485.0
@@ -9,14 +26,20 @@ offset_right = 596.0
 offset_bottom = 840.0
 size_flags_horizontal = 8
 size_flags_vertical = 8
+theme = SubResource("Theme_bj7cl")
+theme_override_constants/separation = 20
 script = ExtResource("1_rrvbl")
 
 [node name="RestartButton" type="Button" parent="." unique_id=639348064]
 layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_s773y")
+theme_override_styles/hover = SubResource("StyleBoxFlat_bj7cl")
 text = "Restart"
 
 [node name="QuitButton" type="Button" parent="." unique_id=567341814]
 layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_s773y")
+theme_override_styles/hover = SubResource("StyleBoxFlat_bj7cl")
 text = "Quit"
 
 [connection signal="pressed" from="RestartButton" to="." method="on_restart"]

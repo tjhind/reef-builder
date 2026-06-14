@@ -1,7 +1,12 @@
 [gd_scene format=3 uid="uid://bman62d6sfhsm"]
 
 [ext_resource type="Script" uid="uid://c20ssgy7kbv2x" path="res://scenes/screens/lose_screen.gd" id="1_h8ujx"]
+[ext_resource type="FontFile" uid="uid://co6gbvl4foh1a" path="res://fonts/Matcha Cih.ttf" id="2_obla8"]
 [ext_resource type="PackedScene" uid="uid://dnnc3eir0nu8b" path="res://scenes/buttons/end_buttons.tscn" id="2_te7av"]
+[ext_resource type="FontFile" uid="uid://q0nk4vqg262s" path="res://fonts/Garet-Book.ttf" id="4_02b3w"]
+[ext_resource type="Texture2D" uid="uid://x88601jsi6ep" path="res://assets/Pollution_Clouds 3.png" id="5_2qtkb"]
+[ext_resource type="Texture2D" uid="uid://il73r4u67137" path="res://assets/Pollution_Clouds 2.png" id="6_3i4w4"]
+[ext_resource type="Texture2D" uid="uid://gvplar7xikrw" path="res://assets/pollution-clouds.png" id="7_3i4w4"]
 
 [node name="LoseScreen" type="Control" unique_id=152622058]
 layout_mode = 3
@@ -19,7 +24,21 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(1, 0.09411765, 1, 1)
+color = Color(0.45882353, 0.59607846, 0.6, 1)
+
+[node name="Label" type="Label" parent="Panel" unique_id=185280211]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -450.0
+offset_top = 121.0
+offset_right = 450.0
+offset_bottom = 372.0
+grow_horizontal = 2
+theme_override_fonts/font = ExtResource("2_obla8")
+theme_override_font_sizes/font_size = 90
+text = "Pollution has spread"
 
 [node name="EndButtons" parent="." unique_id=30431467 instance=ExtResource("2_te7av")]
 layout_mode = 1
@@ -27,26 +46,106 @@ anchors_preset = 14
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
-offset_left = 0.0
-offset_top = -15.5
-offset_right = -13.0
-offset_bottom = 314.0
+offset_left = 436.0
+offset_top = 253.0
+offset_right = -113.0
+offset_bottom = 386.0
 grow_horizontal = 2
 grow_vertical = 2
 
 [node name="ScoreLabel" type="Label" parent="." unique_id=210447006]
 unique_name_in_owner = true
 layout_mode = 0
-offset_right = 844.0
-offset_bottom = 737.0
+offset_left = 196.0
+offset_top = 868.0
+offset_right = 1159.0
+offset_bottom = 980.0
+theme_override_fonts/font = ExtResource("4_02b3w")
 theme_override_font_sizes/font_size = 59
-text = "SCORE"
+text = "you lasted x coral growth cycles"
 
 [node name="Label" type="Label" parent="." unique_id=2141142802]
 layout_mode = 0
-offset_left = 434.0
-offset_top = 121.0
-offset_right = 875.0
-offset_bottom = 204.0
-theme_override_font_sizes/font_size = 60
-text = "Sorry, you lose "
+offset_left = 86.0
+offset_top = 449.0
+offset_right = 1261.0
+offset_bottom = 785.0
+theme_override_fonts/font = ExtResource("4_02b3w")
+theme_override_font_sizes/font_size = 40
+text = "The reef could not grow fast enough. Pollution has spread across the seabed, leaving little room for life to recover.
+
+Perhaps a different strategy can turn the tide."
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=169870944]
+layout_mode = 0
+offset_left = -125.0
+offset_top = 1130.0
+offset_right = 135.0
+offset_bottom = 1390.0
+texture = ExtResource("5_2qtkb")
+
+[node name="TextureRect2" type="TextureRect" parent="." unique_id=564758531]
+layout_mode = 0
+offset_left = -152.0
+offset_top = 1405.0
+offset_right = 305.0
+offset_bottom = 1854.0
+texture = ExtResource("6_3i4w4")
+
+[node name="TextureRect3" type="TextureRect" parent="." unique_id=1581638290]
+layout_mode = 0
+offset_left = 1241.0
+offset_top = 778.0
+offset_right = 1882.0
+offset_bottom = 1365.0
+texture = ExtResource("6_3i4w4")
+
+[node name="TextureRect4" type="TextureRect" parent="." unique_id=512625525]
+layout_mode = 0
+offset_left = 1247.0
+offset_top = 1398.0
+offset_right = 1567.0
+offset_bottom = 1817.0
+texture = ExtResource("6_3i4w4")
+
+[node name="TextureRect5" type="TextureRect" parent="." unique_id=354419423]
+layout_mode = 0
+offset_left = 747.0
+offset_top = 1469.0
+offset_right = 1267.0
+offset_bottom = 1947.0
+texture = ExtResource("5_2qtkb")
+
+[node name="TextureRect6" type="TextureRect" parent="." unique_id=763935613]
+layout_mode = 0
+offset_left = -61.0
+offset_top = 1213.0
+offset_right = 459.0
+offset_bottom = 1691.0
+texture = ExtResource("7_3i4w4")
+
+[node name="TextureRect7" type="TextureRect" parent="." unique_id=933267688]
+layout_mode = 0
+offset_left = 1124.0
+offset_top = 841.0
+offset_right = 1557.0
+offset_bottom = 1512.0
+texture = ExtResource("7_3i4w4")
+
+[node name="TextureRect8" type="TextureRect" parent="." unique_id=725980063]
+layout_mode = 0
+offset_left = -351.0
+offset_top = 552.0
+offset_right = 82.0
+offset_bottom = 1223.0
+texture = ExtResource("7_3i4w4")
+
+[node name="TextureRect9" type="TextureRect" parent="." unique_id=336076810]
+layout_mode = 0
+offset_left = 832.0
+offset_top = 1185.0
+offset_right = 1265.0
+offset_bottom = 1856.0
+texture = ExtResource("7_3i4w4")

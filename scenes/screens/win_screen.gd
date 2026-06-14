@@ -1,5 +1,4 @@
 extends Control
-
 func _ready():
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-	$ScoreLabel.text = "Completed in %d turns\nRating: %s" % [GameData.last_turns, GameData.last_rating]
+	$ScoreLabel.text = "Completed in %d coral growth cycles" % GameData.last_turns

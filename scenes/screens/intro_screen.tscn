@@ -7,6 +7,22 @@
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4firs"]
 bg_color = Color(0.45882353, 0.59607846, 0.6, 1)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_blep5"]
+content_margin_left = 24.0
+content_margin_top = 24.0
+content_margin_right = 24.0
+content_margin_bottom = 24.0
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vw2cb"]
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
 [node name="IntroScreen" type="Control" unique_id=1635084721]
 layout_mode = 3
 anchors_preset = 15
@@ -26,45 +42,67 @@ grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_4firs")
 
 [node name="Label" type="Label" parent="Panel" unique_id=110137244]
-layout_mode = 0
-offset_left = 95.0
-offset_top = 135.0
-offset_right = 1263.0
-offset_bottom = 672.0
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -584.0
+offset_top = 161.0
+offset_right = 584.0
+offset_bottom = 698.0
+grow_horizontal = 2
 theme_override_fonts/font = ExtResource("2_blep5")
 theme_override_font_sizes/font_size = 208
 text = "reef 
 builder"
 horizontal_alignment = 1
 
-[node name="Label2" type="Label" parent="Panel/Label" unique_id=1478129584]
-layout_mode = 0
-offset_left = 8.0
-offset_top = 657.0
-offset_right = 1240.0
-offset_bottom = 1021.0
-theme_override_fonts/font = ExtResource("3_vw2cb")
-theme_override_font_sizes/font_size = 33
-text = "
-the reef is fading, but hope still spreads beneath the waves.
-
-it's your mission to cultivate coral and help the ocean flourish once more.
-"
-
 [node name="Button" type="Button" parent="Panel" unique_id=1809333780]
-layout_mode = 0
-offset_left = 91.0
-offset_top = 1401.0
-offset_right = 1259.0
-offset_bottom = 1482.0
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -225.0
+offset_top = -366.0
+offset_right = 225.0
+offset_bottom = -216.0
+grow_horizontal = 2
+grow_vertical = 0
 theme_override_colors/font_color = Color(0.875, 0.875, 0.875, 1)
 theme_override_colors/font_focus_color = Color(0.95, 0.95, 0.95, 1)
 theme_override_colors/font_pressed_color = Color(1, 1, 1, 1)
 theme_override_colors/font_hover_color = Color(0.95, 0.95, 0.95, 1)
 theme_override_colors/font_hover_pressed_color = Color(1, 1, 1, 1)
 theme_override_fonts/font = ExtResource("3_vw2cb")
-theme_override_font_sizes/font_size = 50
+theme_override_font_sizes/font_size = 70
+theme_override_styles/normal = SubResource("StyleBoxFlat_blep5")
+theme_override_styles/hover = SubResource("StyleBoxFlat_vw2cb")
 action_mode = 0
-text = "continue"
+text = "save the ocean"
+
+[node name="Label2" type="Label" parent="Panel" unique_id=1478129584]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -555.0
+offset_top = -128.0
+offset_right = 556.0
+offset_bottom = 401.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("3_vw2cb")
+theme_override_font_sizes/font_size = 50
+text = "
+the reef is fading, but hope still spreads beneath the waves.
+
+it's your mission to cultivate coral and help the ocean flourish once more.
+"
+horizontal_alignment = 1
+autowrap_mode = 2
 
 [connection signal="pressed" from="Panel/Button" to="." method="_on_button_pressed"]

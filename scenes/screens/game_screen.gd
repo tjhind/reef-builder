@@ -13,18 +13,21 @@ const HEIGHT = 15
 const HAND_SIZE := 3
 const RECLAIM_NEIGHBOURS := 3 
 const RECLAIM_CHANCE := 0.6
-const CORAL_SPREAD_CHANCE := 0.5   
-const POLLUTION_SPREAD_CHANCE := 0.5 
+const CORAL_SPREAD_CHANCE := 0.6   
+const POLLUTION_SPREAD_CHANCE := 0.5
+const LOW_TILES_WARNING := 3
+var warning_label: Label
 var hand: Array = []         
 var selected_index: int = 0    
 var card_buttons: Array = []   
+var just_placed = null
 @onready var hand_panel: HBoxContainer = %HandPanel
 
 const ORTHOGONAL_DIRS := [Vector2i.UP, Vector2i.DOWN, Vector2i.LEFT, Vector2i.RIGHT]
 const DIAGONAL_DIRS := [Vector2i(-1, -1), Vector2i(1, -1), Vector2i(-1, 1), Vector2i(1, 1)]
 
 enum Coral { BRANCHING, BRAIN, FAN }
-const CORAL_HEALTH := { Coral.BRANCHING: 1, Coral.FAN: 2, Coral.BRAIN: 3 }
+const CORAL_HEALTH := { Coral.BRANCHING: 2, Coral.FAN: 3, Coral.BRAIN: 4 }
 const POLLUTION_RATE := 1  
 const CORAL_SUPPRESSION := 0.25 
 
@@ -60,7 +63,8 @@ func _ready():
 	count_growable()
 	fit_board_to_screen()
 	setup_coral()
-	spawn_pollution(2)
+	spawn_pollution(1)
+	setup_warning_label()
 	update_hud()
 
 func generate_terrain():
@@ -165,6 +169,23 @@ func update_hand_ui():
 		tween.tween_property(btn, "modulate", target_color, 0.15)
 		
 		
+func count_empty_tiles() -> int:
+	return total_growable - coral_grid.size() - pollution_grid.size()
+
+func setup_warning_label():
+	warning_label = Label.new()
+	warning_label.text = "look carefully for empty spaces on the reef — including ones on the rocks."
+	warning_label.add_theme_font_size_override("font_size", 28)
+	warning_label.add_theme_font_override("font", load("res://fonts/garet-book.ttf"))
+	warning_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	warning_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	warning_label.z_index = 200                        # above the board sprites
+	var vp = get_viewport_rect().size
+	warning_label.position = Vector2(40, 170)          # in the top strip; nudge to taste
+	warning_label.size = Vector2(vp.x - 80, 90)
+	warning_label.visible = false
+	add_child(warning_label)
+		
 		
 func update_cursor_to_selection():
 	current_coral = hand[selected_index]
@@ -214,6 +235,7 @@ func try_place_coral(coords: Vector2i):
 		print("Invalid placement at ", coords)
 		return
 	place_coral(coords, current_coral)
+	just_placed = coords 
 	end_turn()
 
 
@@ -233,6 +255,8 @@ func spread_coral():
 	var sources = coral_grid.keys()
 	var grew = 0
 	for coords in sources:
+		if coords == just_placed:
+			continue   # the coral you just placed establishes first, spreads next turn
 		if randf() > CORAL_SPREAD_CHANCE:
 			continue   # this coral rests this turn
 		var type = coral_grid[coords]["type"]
@@ -246,8 +270,11 @@ func spread_coral():
 		for i in range(min(budget, targets.size())):
 			place_coral(targets[i], type)
 			grew += 1
+	just_placed = null   # cleared so it spreads normally next turn
 	if grew > 0:
 		spawn_fish(2)
+		
+		
 func get_spread_budget(coords: Vector2i, type: int) -> int:
 	var budget = 1 
 	var terrain = terrain_tilemap.get_cell_source_id(coords)
@@ -301,6 +328,7 @@ func count_coral_neighbours(coords: Vector2i) -> int:
 
 func advance_pollution():
 	var sources = pollution_grid.keys()
+	var damaged_this_turn := {}        # each coral takes at most one hit per turn
 	for coords in sources:
 		var choked = randf() < count_coral_neighbours(coords) * CORAL_SUPPRESSION
 		var spreads = (not choked) and randf() < POLLUTION_SPREAD_CHANCE
@@ -309,11 +337,11 @@ func advance_pollution():
 			if not can_pollute(n):
 				continue
 			if coral_grid.has(n):
-				damage_coral(n)        # still gnaws at adjacent coral every turn
+				if not damaged_this_turn.has(n):
+					damaged_this_turn[n] = true
+					damage_coral(n)
 			elif spreads:
-				pollute_tile(n)      
-				
-				
+				pollute_tile(n)
 func can_pollute(coords: Vector2i) -> bool:
 	if coords.x < 0 or coords.x >= WIDTH or coords.y < 0 or coords.y >= HEIGHT:
 		return false
@@ -412,6 +440,8 @@ func get_rating() -> String:
 
 func update_hud():
 	race_bar.set_values(get_coral_coverage(), get_pollution_coverage())
+	if warning_label:
+		warning_label.visible = count_empty_tiles() <= LOW_TILES_WARNING
 
 var instructions_overlay: Control = null
 

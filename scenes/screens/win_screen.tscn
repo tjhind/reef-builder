@@ -2,6 +2,10 @@
 
 [ext_resource type="Script" uid="uid://6b7fd1xwbq5j" path="res://scenes/screens/win_screen.gd" id="1_xjpxm"]
 [ext_resource type="PackedScene" uid="uid://dnnc3eir0nu8b" path="res://scenes/buttons/end_buttons.tscn" id="2_04akm"]
+[ext_resource type="FontFile" uid="uid://co6gbvl4foh1a" path="res://fonts/Matcha Cih.ttf" id="2_mcovk"]
+[ext_resource type="FontFile" uid="uid://q0nk4vqg262s" path="res://fonts/Garet-Book.ttf" id="4_cmosp"]
+[ext_resource type="Texture2D" uid="uid://d2d2bxnrr6n5f" path="res://assets/nemo-fish.png" id="5_cmosp"]
+[ext_resource type="Texture2D" uid="uid://dijdcccdds4mk" path="res://assets/sparkles.png" id="6_ey0qu"]
 
 [node name="WinScreen" type="Control" unique_id=1588902026]
 layout_mode = 3
@@ -19,7 +23,22 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(1, 0.27450982, 1, 1)
+color = Color(0.45882353, 0.59607846, 0.6, 1)
+
+[node name="Label" type="Label" parent="." unique_id=67296332]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -427.0
+offset_top = 126.0
+offset_right = 473.0
+offset_bottom = 377.0
+grow_horizontal = 2
+theme_override_fonts/font = ExtResource("2_mcovk")
+theme_override_font_sizes/font_size = 90
+text = "Life is spreading
+"
 
 [node name="ScoreLabel" type="Label" parent="." unique_id=1086207338]
 layout_mode = 1
@@ -28,35 +47,85 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -390.0
-offset_top = -486.0
-offset_right = 558.0
-offset_bottom = 462.0
+offset_left = -298.0
+offset_top = -190.0
+offset_right = 324.0
+offset_bottom = 388.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_font_sizes/font_size = 90
-text = "Score"
+theme_override_fonts/font = ExtResource("4_cmosp")
+theme_override_font_sizes/font_size = 55
+text = "
+Completed in x 
+coral growth cycles
 
-[node name="EndButtons" parent="ScoreLabel" unique_id=30431467 instance=ExtResource("2_04akm")]
+"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="Label2" type="Label" parent="." unique_id=2008376042]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 113.0
+offset_top = 421.0
+offset_right = -105.0
+offset_bottom = -1051.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("4_cmosp")
+theme_override_font_sizes/font_size = 40
+text = "The reef has recovered. Against the odds, healthy coral has spread throughout the reef. The ocean floor is alive with color, growth, and renewal."
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=990743449]
+layout_mode = 0
+offset_left = 1091.0
+offset_top = 851.0
+offset_right = 1497.0
+offset_bottom = 1257.0
+texture = ExtResource("5_cmosp")
+
+[node name="TextureRect2" type="TextureRect" parent="." unique_id=436755174]
+layout_mode = 0
+offset_left = -14.0
+offset_top = 1167.0
+offset_right = 575.0
+offset_bottom = 1756.0
+texture = ExtResource("5_cmosp")
+
+[node name="TextureRect4" type="TextureRect" parent="." unique_id=932995688]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = 52.0
+offset_top = 946.0
+offset_right = 2100.0
+offset_bottom = 2994.0
+grow_horizontal = 2
+texture = ExtResource("6_ey0qu")
+
+[node name="TextureRect3" type="TextureRect" parent="." unique_id=1305270398]
+layout_mode = 0
+offset_left = 1082.0
+offset_top = 1448.0
+offset_right = 1338.0
+offset_bottom = 1704.0
+texture = ExtResource("5_cmosp")
+
+[node name="EndButtons" parent="." unique_id=30431467 instance=ExtResource("2_04akm")]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -124.5
-offset_top = -39.5
-offset_right = 124.5
-offset_bottom = 39.5
+offset_left = -228.0
+offset_top = 236.0
+offset_right = 284.0
+offset_bottom = 369.0
 grow_horizontal = 2
 grow_vertical = 2
-
-[node name="Label" type="Label" parent="." unique_id=67296332]
-layout_mode = 0
-offset_left = 354.0
-offset_top = 487.0
-offset_right = 1166.0
-offset_bottom = 1175.0
-theme_override_font_sizes/font_size = 90
-text = "Congrats you win 
-"
