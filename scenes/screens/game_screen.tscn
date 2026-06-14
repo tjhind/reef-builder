@@ -5,11 +5,19 @@
 [ext_resource type="Texture2D" uid="uid://cw871ih2j3qux" path="res://assets/branch-coral-tile.png" id="2_riit4"]
 [ext_resource type="Texture2D" uid="uid://cf8fj76b3fvb2" path="res://assets/brain-coral-tile.png" id="3_wvjml"]
 [ext_resource type="Texture2D" uid="uid://cmblf8sgs20v2" path="res://assets/fan-coral-tile.png" id="4_xi1he"]
-[ext_resource type="Texture2D" uid="uid://bomil51plaour" path="res://assets/pollution.png" id="5_riit4"]
+[ext_resource type="Texture2D" uid="uid://cqhi37jfkns1f" path="res://assets/branch-coral.png" id="5_l8upr"]
+[ext_resource type="Texture2D" uid="uid://bopvwm2vd564r" path="res://assets/brain-coral.png" id="6_cbsd3"]
 [ext_resource type="Texture2D" uid="uid://d2d2bxnrr6n5f" path="res://assets/nemo-fish.png" id="6_d7q35"]
 [ext_resource type="Texture2D" uid="uid://gvplar7xikrw" path="res://assets/pollution-clouds.png" id="7_5aqvp"]
 [ext_resource type="Script" uid="uid://dfkxqlwo8d85m" path="res://scenes/screens/info_button.gd" id="7_ac6br"]
+[ext_resource type="Texture2D" uid="uid://d0k04ytgt1txv" path="res://assets/fan-coral.png" id="7_r0cfc"]
+[ext_resource type="Texture2D" uid="uid://b7lkg3wii067a" path="res://assets/Pollution_Clouds 1.png" id="8_ouacg"]
+[ext_resource type="Texture2D" uid="uid://il73r4u67137" path="res://assets/Pollution_Clouds 2.png" id="9_lvgud"]
 [ext_resource type="Script" uid="uid://bp4s8qkjff0l0" path="res://scenes/screens/race_bar.gd" id="10_ac6br"]
+[ext_resource type="Texture2D" uid="uid://x88601jsi6ep" path="res://assets/Pollution_Clouds 3.png" id="10_c8aqn"]
+[ext_resource type="Texture2D" uid="uid://dfv80p7o258tw" path="res://assets/Pollution_Clouds 4.png" id="11_0qj6w"]
+[ext_resource type="Texture2D" uid="uid://nfn3tgol2dqy" path="res://assets/Pollution_Clouds.png" id="12_gophl"]
+[ext_resource type="Script" uid="uid://dwsc674btr51y" path="res://scenes/screens/board_mask.gd" id="17_lvgud"]
 
 [node name="GameScreen" type="Control" unique_id=1897142186]
 layout_mode = 3
@@ -23,7 +31,10 @@ script = ExtResource("1_5wjna")
 branching_texture = ExtResource("2_riit4")
 brain_texture = ExtResource("3_wvjml")
 fan_texture = ExtResource("4_xi1he")
-pollution_texture = ExtResource("5_riit4")
+branching_tiles = Array[Texture2D]([ExtResource("5_l8upr")])
+brain_tiles = Array[Texture2D]([ExtResource("6_cbsd3")])
+fan_tiles = Array[Texture2D]([ExtResource("7_r0cfc")])
+pollution_textures = Array[Texture2D]([ExtResource("8_ouacg"), ExtResource("9_lvgud"), ExtResource("10_c8aqn"), ExtResource("11_0qj6w"), ExtResource("12_gophl")])
 fish_texture = ExtResource("6_d7q35")
 pollution_cloud_texture = ExtResource("7_5aqvp")
 
@@ -35,50 +46,22 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-color = Color(0.8862745, 1, 1, 1)
-
-[node name="TerrainTileMap" type="TileMapLayer" parent="." unique_id=1976445403]
-tile_set = ExtResource("2_beu7v")
+color = Color(0.45882353, 0.59607846, 0.6, 1)
 
 [node name="InfoButton" type="Button" parent="." unique_id=247753711]
 layout_mode = 1
-anchors_preset = 1
+anchors_preset = 3
 anchor_left = 1.0
+anchor_top = 1.0
 anchor_right = 1.0
-offset_left = -13.0
-offset_bottom = 31.0
+anchor_bottom = 1.0
+offset_left = -95.0
+offset_top = -72.0
 grow_horizontal = 0
+grow_vertical = 0
 theme_override_font_sizes/font_size = 46
 text = "info"
 script = ExtResource("7_ac6br")
-
-[node name="ScorePanel" type="HBoxContainer" parent="." unique_id=418914215]
-layout_mode = 1
-anchors_preset = 2
-anchor_top = 1.0
-anchor_bottom = 1.0
-offset_left = 20.0
-offset_top = -96.0
-offset_right = 474.0
-offset_bottom = 1.0
-grow_vertical = 0
-
-[node name="CoralLabel" type="Label" parent="ScorePanel" unique_id=1362450456]
-layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.078431375, 1, 1)
-theme_override_font_sizes/font_size = 37
-text = "Coral: 0%"
-
-[node name="PollutionLabel" type="Label" parent="ScorePanel" unique_id=578391336]
-layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.15294118, 1, 1)
-theme_override_font_sizes/font_size = 30
-text = "Pollution: 0%"
-
-[node name="TurnLabel" type="Label" parent="ScorePanel" unique_id=206772757]
-layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.05882353, 1, 1)
-text = "Turns: "
 
 [node name="HandPanel" type="HBoxContainer" parent="." unique_id=2039165399]
 unique_name_in_owner = true
@@ -98,14 +81,27 @@ grow_vertical = 0
 [node name="RaceBar" type="Control" parent="." unique_id=1349754537]
 unique_name_in_owner = true
 layout_mode = 1
-anchors_preset = 10
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
 anchor_right = 1.0
-offset_left = 1.0
-offset_top = 1.0
-offset_right = 6.0
-offset_bottom = 70.0
-grow_horizontal = 2
+anchor_bottom = 1.0
+offset_left = -329.0
+offset_top = -1695.0
+offset_right = -4.0
+offset_bottom = -1618.0
+grow_horizontal = 0
+grow_vertical = 0
 mouse_filter = 2
 script = ExtResource("10_ac6br")
+
+[node name="BoardMask" type="Control" parent="." unique_id=493518011]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("17_lvgud")
+
+[node name="TerrainTileMap" type="TileMapLayer" parent="BoardMask" unique_id=1976445403]
+tile_set = ExtResource("2_beu7v")
 
 [connection signal="pressed" from="InfoButton" to="." method="_on_info_button_pressed"]

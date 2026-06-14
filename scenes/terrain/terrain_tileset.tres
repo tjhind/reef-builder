@@ -2,7 +2,10 @@
 
 [ext_resource type="Texture2D" uid="uid://be63rp47j08es" path="res://assets/deep-sea.png" id="1_72dmc"]
 [ext_resource type="Texture2D" uid="uid://dd3a3mtjqh1kc" path="res://assets/rock.png" id="2_wxco7"]
-[ext_resource type="Texture2D" uid="uid://bjpdkta7l54bx" path="res://assets/sand.png" id="3_d2qxt"]
+[ext_resource type="Texture2D" uid="uid://oo5mov5terw3" path="res://assets/sand-new.png" id="3_72dmc"]
+[ext_resource type="Texture2D" uid="uid://bqmjsmikhp54k" path="res://assets/sea_sheet.png" id="4_qqvaa"]
+[ext_resource type="Texture2D" uid="uid://dma35bk3uuap8" path="res://assets/sand_sheet.png" id="5_cqfkt"]
+[ext_resource type="Texture2D" uid="uid://p7lbsp20ood0" path="res://assets/rock_sheet.png" id="6_44q3d"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_72dmc"]
 texture = ExtResource("1_72dmc")
@@ -15,12 +18,35 @@ texture_region_size = Vector2i(256, 256)
 0:0/0 = 0
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_wxco7"]
-texture = ExtResource("3_d2qxt")
+texture = ExtResource("3_72dmc")
 texture_region_size = Vector2i(256, 256)
 0:0/0 = 0
 
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_kqgu1"]
+texture = ExtResource("4_qqvaa")
+texture_region_size = Vector2i(256, 256)
+0:0/0 = 0
+1:0/0 = 0
+2:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_22h3r"]
+texture = ExtResource("5_cqfkt")
+texture_region_size = Vector2i(256, 256)
+0:0/0 = 0
+1:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_kkprq"]
+texture = ExtResource("6_44q3d")
+texture_region_size = Vector2i(256, 256)
+0:0/0 = 0
+1:0/0 = 0
+2:0/0 = 0
+
 [resource]
 tile_size = Vector2i(256, 256)
-sources/0 = SubResource("TileSetAtlasSource_72dmc")
-sources/2 = SubResource("TileSetAtlasSource_wxco7")
+sources/3 = SubResource("TileSetAtlasSource_wxco7")
 sources/1 = SubResource("TileSetAtlasSource_d2qxt")
+sources/0 = SubResource("TileSetAtlasSource_72dmc")
+sources/4 = SubResource("TileSetAtlasSource_kqgu1")
+sources/5 = SubResource("TileSetAtlasSource_22h3r")
+sources/6 = SubResource("TileSetAtlasSource_kkprq")

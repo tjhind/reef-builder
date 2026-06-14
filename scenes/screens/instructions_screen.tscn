@@ -1,9 +1,14 @@
 [gd_scene format=3 uid="uid://dpd81yyjoj5kv"]
 
 [ext_resource type="Script" uid="uid://bla3oy7h3vgd1" path="res://scenes/screens/instructions_screen.gd" id="1_fm15f"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qcne5"]
-bg_color = Color(0.45882353, 0.59607846, 0.6, 1)
+[ext_resource type="FontFile" uid="uid://co6gbvl4foh1a" path="res://fonts/Matcha Cih.ttf" id="2_5s0pw"]
+[ext_resource type="FontFile" uid="uid://q0nk4vqg262s" path="res://fonts/Garet-Book.ttf" id="3_wrdii"]
+[ext_resource type="Texture2D" uid="uid://bopvwm2vd564r" path="res://assets/brain-coral.png" id="4_oqfav"]
+[ext_resource type="Texture2D" uid="uid://cqhi37jfkns1f" path="res://assets/branch-coral.png" id="5_wwfgv"]
+[ext_resource type="Texture2D" uid="uid://d0k04ytgt1txv" path="res://assets/fan-coral.png" id="6_oqvn4"]
+[ext_resource type="Texture2D" uid="uid://oo5mov5terw3" path="res://assets/sand-new.png" id="7_vtb3m"]
+[ext_resource type="Texture2D" uid="uid://ddn7qg7puhc2y" path="res://assets/rock-3.png" id="8_kw0c6"]
+[ext_resource type="Texture2D" uid="uid://b7lkg3wii067a" path="res://assets/Pollution_Clouds 1.png" id="9_j3rkq"]
 
 [node name="InstructionsScreen" type="Control" unique_id=553287576]
 layout_mode = 3
@@ -14,52 +19,329 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_fm15f")
 
-[node name="Panel" type="Panel" parent="." unique_id=918891001]
+[node name="Panel" type="ColorRect" parent="." unique_id=2065538119]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_qcne5")
+scale = Vector2(1.0010636, 1)
+color = Color(0.45882353, 0.59607846, 0.6, 1)
 
-[node name="Button" type="Button" parent="Panel" unique_id=483191570]
+[node name="Label2" type="Label" parent="Panel" unique_id=231803873]
 layout_mode = 1
-anchors_preset = 7
+anchors_preset = 5
 anchor_left = 0.5
-anchor_top = 1.0
 anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -112.5
-offset_top = -153.0
-offset_right = 112.5
-offset_bottom = -33.0
+offset_left = -444.0
+offset_top = 109.0
+offset_right = 445.0
+offset_bottom = 646.0
 grow_horizontal = 2
-grow_vertical = 0
-theme_override_colors/font_color = Color(0.875, 0.875, 0.875, 1)
-theme_override_colors/font_focus_color = Color(0.95, 0.95, 0.95, 1)
-theme_override_colors/font_pressed_color = Color(1, 1, 1, 1)
-theme_override_colors/font_hover_color = Color(0.95, 0.95, 0.95, 1)
-theme_override_colors/font_hover_pressed_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 50
-action_mode = 0
-text = "start"
+theme_override_fonts/font = ExtResource("2_5s0pw")
+theme_override_font_sizes/font_size = 80
+text = "coral types"
+horizontal_alignment = 1
 
-[node name="Label" type="Label" parent="Panel" unique_id=1091593498]
+[node name="HBoxContainer" type="HBoxContainer" parent="Panel/Label2" unique_id=684462798]
+layout_mode = 0
+offset_left = -177.05737
+offset_top = 551.0
+offset_right = 1136.9426
+offset_bottom = 701.0
+theme_override_constants/separation = 180
+alignment = 1
+
+[node name="Label" type="Label" parent="Panel/Label2/HBoxContainer" unique_id=215152249]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_wrdii")
+theme_override_font_sizes/font_size = 25
+text = "fast growth, but fragile
+vulnerable to pollution."
+
+[node name="Label2" type="Label" parent="Panel/Label2/HBoxContainer" unique_id=655312743]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_wrdii")
+theme_override_font_sizes/font_size = 25
+text = "long reach.
+can spread diagonally."
+
+[node name="Label3" type="Label" parent="Panel/Label2/HBoxContainer" unique_id=2046188703]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_wrdii")
+theme_override_font_sizes/font_size = 25
+text = "spreads slowly. 
+survives pollution longer."
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="Panel/Label2" unique_id=326027504]
+layout_mode = 0
+offset_left = -191.0425
+offset_top = 468.0
+offset_right = 1122.9575
+offset_bottom = 618.0
+theme_override_constants/separation = 140
+alignment = 1
+
+[node name="Label" type="Label" parent="Panel/Label2/HBoxContainer3" unique_id=52399446]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_5s0pw")
+theme_override_font_sizes/font_size = 28
+text = "Growth: ★★☆☆☆
+Durability: ★★★★★
+"
+horizontal_alignment = 1
+
+[node name="Label2" type="Label" parent="Panel/Label2/HBoxContainer3" unique_id=927435114]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_5s0pw")
+theme_override_font_sizes/font_size = 28
+text = "Growth: ★★★★★
+Durability: ★★☆☆☆
+"
+horizontal_alignment = 1
+
+[node name="Label3" type="Label" parent="Panel/Label2/HBoxContainer3" unique_id=1960094710]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_5s0pw")
+theme_override_font_sizes/font_size = 28
+text = "Growth: ★★★★☆
+Durability: ★☆☆☆☆
+"
+horizontal_alignment = 1
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="Panel/Label2" unique_id=1246443933]
+layout_mode = 0
+offset_left = -189.04462
+offset_top = 1217.0
+offset_right = 1124.9553
+offset_bottom = 1367.0
+theme_override_constants/separation = 140
+alignment = 1
+
+[node name="Label" type="Label" parent="Panel/Label2/HBoxContainer4" unique_id=426208184]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_5s0pw")
+theme_override_font_sizes/font_size = 28
+text = "Growth: ★★★★☆
+
+"
+horizontal_alignment = 1
+
+[node name="Label2" type="Label" parent="Panel/Label2/HBoxContainer4" unique_id=413369300]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_5s0pw")
+theme_override_font_sizes/font_size = 28
+text = "Growth: ★★★★★
+
+"
+horizontal_alignment = 1
+
+[node name="Label3" type="Label" parent="Panel/Label2/HBoxContainer4" unique_id=949817382]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_5s0pw")
+theme_override_font_sizes/font_size = 28
+text = "Growth: ☆☆☆☆☆
+"
+horizontal_alignment = 1
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Panel/Label2" unique_id=334666235]
+layout_mode = 0
+offset_left = -144.09242
+offset_top = 1311.0
+offset_right = 1169.9076
+offset_bottom = 1461.0
+theme_override_constants/separation = 150
+
+[node name="Label" type="Label" parent="Panel/Label2/HBoxContainer2" unique_id=1772040585]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_wrdii")
+theme_override_font_sizes/font_size = 28
+text = "coral thrives normally."
+
+[node name="Label2" type="Label" parent="Panel/Label2/HBoxContainer2" unique_id=806444997]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_wrdii")
+theme_override_font_sizes/font_size = 28
+text = "accelerated coral growth."
+
+[node name="Label3" type="Label" parent="Panel/Label2/HBoxContainer2" unique_id=963627328]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_wrdii")
+theme_override_font_sizes/font_size = 28
+text = "coral killer."
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Panel" unique_id=919680279]
+layout_mode = 0
+offset_left = 157.0
+offset_top = 1507.0
+offset_right = 1175.0
+offset_bottom = 2129.0
+theme_override_fonts/normal_font = ExtResource("3_wrdii")
+theme_override_font_sizes/normal_font_size = 56
+text = "
+"
+
+[node name="Label3" type="Label" parent="Panel" unique_id=1202130478]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -514.1711
+offset_top = 824.0
+offset_right = 527.829
+offset_bottom = 1361.0
+grow_horizontal = 2
+theme_override_fonts/font = ExtResource("2_5s0pw")
+theme_override_font_sizes/font_size = 80
+text = "terrain types"
+horizontal_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Panel" unique_id=1279729127]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.07700001
+anchor_right = 0.5
+anchor_bottom = 0.07700001
+offset_left = -578.0
+offset_top = 99.09999
+offset_right = 590.0
+offset_bottom = 355.09998
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.9974231, 1)
+theme_override_constants/separation = 200
+alignment = 1
+
+[node name="Sprite2D" type="TextureRect" parent="Panel/HBoxContainer" unique_id=1899676226]
+layout_mode = 2
+texture = ExtResource("4_oqfav")
+
+[node name="Sprite2D2" type="TextureRect" parent="Panel/HBoxContainer" unique_id=1641207312]
+layout_mode = 2
+texture = ExtResource("5_wwfgv")
+
+[node name="Sprite2D3" type="TextureRect" parent="Panel/HBoxContainer" unique_id=1338872711]
+layout_mode = 2
+texture = ExtResource("6_oqvn4")
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Panel" unique_id=941819161]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -245.0
-offset_top = -415.0
-offset_right = 226.0
-offset_bottom = -305.0
+offset_left = -584.0967
+offset_top = -352.0
+offset_right = 636.9033
+offset_bottom = -293.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_font_sizes/font_size = 80
-text = "information"
+scale = Vector2(0.9811761, 1.027443)
+theme_override_constants/separation = 140
+
+[node name="Label4" type="Label" parent="Panel/HBoxContainer2" unique_id=882843466]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_5s0pw")
+theme_override_font_sizes/font_size = 45
+text = "brain coral"
 horizontal_alignment = 1
 
-[connection signal="pressed" from="Panel/Button" to="." method="_on_button_pressed"]
+[node name="Label5" type="Label" parent="Panel/HBoxContainer2" unique_id=1073450127]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_5s0pw")
+theme_override_font_sizes/font_size = 45
+text = "branch coral"
+horizontal_alignment = 1
+
+[node name="Label6" type="Label" parent="Panel/HBoxContainer2" unique_id=247585216]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_5s0pw")
+theme_override_font_sizes/font_size = 45
+text = "fan coral"
+horizontal_alignment = 1
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="Panel" unique_id=100980361]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -546.1371
+offset_top = 405.0
+offset_right = 674.8629
+offset_bottom = 464.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.9811761, 1.027443)
+theme_override_constants/separation = 350
+
+[node name="Label4" type="Label" parent="Panel/HBoxContainer3" unique_id=1398332215]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_5s0pw")
+theme_override_font_sizes/font_size = 45
+text = "sand"
+horizontal_alignment = 1
+
+[node name="Label5" type="Label" parent="Panel/HBoxContainer3" unique_id=1705114012]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_5s0pw")
+theme_override_font_sizes/font_size = 45
+text = "rock"
+horizontal_alignment = 1
+
+[node name="Label6" type="Label" parent="Panel/HBoxContainer3" unique_id=1541394492]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_5s0pw")
+theme_override_font_sizes/font_size = 45
+text = "polluted"
+horizontal_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=2019218770]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -579.0
+offset_top = -725.0
+offset_right = 601.0
+offset_bottom = -465.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/separation = 200
+
+[node name="TextureRect2" type="TextureRect" parent="HBoxContainer" unique_id=1279986812]
+layout_mode = 2
+texture = ExtResource("7_vtb3m")
+
+[node name="TextureRect" type="TextureRect" parent="HBoxContainer" unique_id=2030523410]
+layout_mode = 2
+size_flags_horizontal = 4
+texture = ExtResource("8_kw0c6")
+
+[node name="TextureRect3" type="TextureRect" parent="HBoxContainer" unique_id=472857937]
+layout_mode = 2
+texture = ExtResource("9_j3rkq")
+
+[node name="Button" type="Button" parent="." unique_id=483191570]
+layout_mode = 0
+offset_left = 439.0
+offset_top = 1534.0
+offset_right = 904.0
+offset_bottom = 1659.0
+theme_override_colors/font_color = Color(0.875, 0.875, 0.875, 1)
+theme_override_colors/font_focus_color = Color(0.95, 0.95, 0.95, 1)
+theme_override_colors/font_pressed_color = Color(1, 1, 1, 1)
+theme_override_colors/font_hover_color = Color(0.95, 0.95, 0.95, 1)
+theme_override_colors/font_hover_pressed_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("3_wrdii")
+theme_override_font_sizes/font_size = 50
+action_mode = 0
+text = "continue"
+
+[connection signal="pressed" from="Button" to="." method="_on_button_pressed"]

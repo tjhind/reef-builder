@@ -1,6 +1,8 @@
 [gd_scene format=3 uid="uid://bc8mku5o5cjdn"]
 
 [ext_resource type="Script" uid="uid://d288ehia81vcs" path="res://scenes/screens/intro_screen.gd" id="1_4firs"]
+[ext_resource type="FontFile" uid="uid://co6gbvl4foh1a" path="res://fonts/Matcha Cih.ttf" id="2_blep5"]
+[ext_resource type="FontFile" uid="uid://q0nk4vqg262s" path="res://fonts/Garet-Book.ttf" id="3_vw2cb"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4firs"]
 bg_color = Color(0.45882353, 0.59607846, 0.6, 1)
@@ -23,53 +25,46 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_4firs")
 
+[node name="Label" type="Label" parent="Panel" unique_id=110137244]
+layout_mode = 0
+offset_left = 95.0
+offset_top = 135.0
+offset_right = 1263.0
+offset_bottom = 672.0
+theme_override_fonts/font = ExtResource("2_blep5")
+theme_override_font_sizes/font_size = 208
+text = "reef 
+builder"
+horizontal_alignment = 1
+
+[node name="Label2" type="Label" parent="Panel/Label" unique_id=1478129584]
+layout_mode = 0
+offset_left = 8.0
+offset_top = 657.0
+offset_right = 1240.0
+offset_bottom = 1021.0
+theme_override_fonts/font = ExtResource("3_vw2cb")
+theme_override_font_sizes/font_size = 33
+text = "
+the reef is fading, but hope still spreads beneath the waves.
+
+it's your mission to cultivate coral and help the ocean flourish once more.
+"
+
 [node name="Button" type="Button" parent="Panel" unique_id=1809333780]
-layout_mode = 1
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -116.0
-offset_top = -227.0
-offset_right = 109.0
-offset_bottom = -107.0
-grow_horizontal = 2
-grow_vertical = 0
+layout_mode = 0
+offset_left = 91.0
+offset_top = 1401.0
+offset_right = 1259.0
+offset_bottom = 1482.0
 theme_override_colors/font_color = Color(0.875, 0.875, 0.875, 1)
 theme_override_colors/font_focus_color = Color(0.95, 0.95, 0.95, 1)
 theme_override_colors/font_pressed_color = Color(1, 1, 1, 1)
 theme_override_colors/font_hover_color = Color(0.95, 0.95, 0.95, 1)
 theme_override_colors/font_hover_pressed_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("3_vw2cb")
 theme_override_font_sizes/font_size = 50
 action_mode = 0
 text = "continue"
-
-[node name="Label" type="Label" parent="Panel" unique_id=110137244]
-layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -235.5
-offset_top = 79.0
-offset_right = 235.5
-offset_bottom = 189.0
-grow_horizontal = 2
-theme_override_font_sizes/font_size = 80
-text = "reef builder"
-horizontal_alignment = 1
-
-[node name="RichTextLabel" type="RichTextLabel" parent="Panel" unique_id=1404054884]
-layout_mode = 0
-offset_left = 281.0
-offset_top = 308.0
-offset_right = 850.0
-offset_bottom = 755.0
-theme_override_font_sizes/normal_font_size = 31
-text = "
-the reef is fading, but hope still spreads beneath the waves.
-
-cultivate coral and help the ocean flourish once more.
-"
 
 [connection signal="pressed" from="Panel/Button" to="." method="_on_button_pressed"]

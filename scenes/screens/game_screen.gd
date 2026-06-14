@@ -1,10 +1,11 @@
 extends Control
 
-@onready var terrain_tilemap = $TerrainTileMap
+@onready var board_mask = $BoardMask
+@onready var terrain_tilemap = $BoardMask/TerrainTileMap
 
-const DEEP_SEA_SOURCE = 0
-const ROCK_SOURCE = 1
-const SAND_SOURCE = 2
+const DEEP_SEA_SOURCE = 4
+const ROCK_SOURCE = 6
+const SAND_SOURCE = 5
 
 
 const WIDTH = 15
@@ -30,18 +31,20 @@ const CORAL_SUPPRESSION := 0.25
 @export var branching_texture: Texture2D
 @export var brain_texture: Texture2D
 @export var fan_texture: Texture2D
-@export var pollution_texture: Texture2D
+@export var branching_tiles: Array[Texture2D]
+@export var brain_tiles: Array[Texture2D]
+@export var fan_tiles: Array[Texture2D]
+@export var pollution_textures: Array[Texture2D]
 @export var fish_texture: Texture2D
 @export var pollution_cloud_texture: Texture2D
 
 
+
 var coral_textures: Dictionary = {}
+var coral_tile_variants: Dictionary = {}
 var coral_types := [Coral.BRANCHING, Coral.BRAIN, Coral.FAN]
 var total_growable := 0 
 var turn_count := 0
-@onready var coral_label: Label = $ScorePanel/CoralLabel
-@onready var pollution_label: Label = $ScorePanel/PollutionLabel
-@onready var turn_label: Label = $ScorePanel/TurnLabel
 @onready var race_bar = %RaceBar
 
 # source of truth of the state of the board
@@ -63,32 +66,43 @@ func _ready():
 func generate_terrain():
 	for y in range(HEIGHT):
 		for x in range(WIDTH):
-			var roll = randf()
-			var source_id: int
-			if roll < 0.70:
-				source_id = SAND_SOURCE
-			elif roll < 0.90:
-				source_id = ROCK_SOURCE
-			else:
-				source_id = DEEP_SEA_SOURCE
-			terrain_tilemap.set_cell(Vector2i(x, y), source_id, Vector2i(0, 0))
+			var source_id = SAND_SOURCE if randf() < 0.75 else ROCK_SOURCE
+			terrain_tilemap.set_cell(Vector2i(x, y), source_id, random_variant(source_id), random_transform())
 
+
+func random_transform() -> int:
+	var t = 0
+	if randf() < 0.5:
+		t |= TileSetAtlasSource.TRANSFORM_FLIP_H
+	if randf() < 0.5:
+		t |= TileSetAtlasSource.TRANSFORM_FLIP_V
+	if randf() < 0.5:
+		t |= TileSetAtlasSource.TRANSFORM_TRANSPOSE
+	return t
+
+func random_variant(source_id: int) -> Vector2i:
+	var source = terrain_tilemap.tile_set.get_source(source_id) as TileSetAtlasSource
+	return source.get_tile_id(randi() % source.get_tiles_count())
 
 func fit_board_to_screen():
 	var viewport = get_viewport_rect().size
-	var top_margin = 200     
-	var bottom_margin = 200 
+	var top_margin = 200
+	var bottom_margin = 200
 	var available_height = viewport.y - top_margin - bottom_margin
 	var board_tiles_px = WIDTH * terrain_tilemap.tile_set.tile_size.x
-
 	var s = min(viewport.x / board_tiles_px, available_height / board_tiles_px)
-	terrain_tilemap.scale = Vector2(s, s)
-
 	var board_px = board_tiles_px * s
-	terrain_tilemap.position = Vector2(
+
+	# size & place the mask where the board should sit
+	board_mask.size = Vector2(board_px, board_px)
+	board_mask.position = Vector2(
 		(viewport.x - board_px) / 2.0,
 		top_margin + (available_height - board_px) / 2.0
 	)
+	board_mask.queue_redraw()
+
+	terrain_tilemap.scale = Vector2(s, s)
+	terrain_tilemap.position = Vector2.ZERO
 
 func setup_coral():
 	coral_textures = {
@@ -96,12 +110,18 @@ func setup_coral():
 		Coral.BRAIN: brain_texture,
 		Coral.FAN: fan_texture,
 	}
+	coral_tile_variants = {
+		Coral.BRANCHING: branching_tiles,
+		Coral.BRAIN: brain_tiles,
+		Coral.FAN: fan_tiles,
+	}
 	# "ghost" sprite 
 	cursor_sprite = Sprite2D.new()
 	cursor_sprite.scale = terrain_tilemap.scale   
-	cursor_sprite.z_index = 100                   
+	cursor_sprite.z_index = 100   
+	cursor_sprite.visible = false                   
 	add_child(cursor_sprite)
-	Input.mouse_mode = Input.MOUSE_MODE_HIDDEN    
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE   
 	deal_hand()
 	build_hand_ui()
 	update_cursor_to_selection()
@@ -127,7 +147,6 @@ func build_hand_ui():
 		btn.custom_minimum_size = Vector2(120, 120)
 		btn.pivot_offset = btn.custom_minimum_size / 2 
 		btn.pressed.connect(_on_card_pressed.bind(i))
-		btn.pressed.connect(_on_card_pressed.bind(i))
 		hand_panel.add_child(btn)
 		card_buttons.append(btn)
 	update_hand_ui()
@@ -137,16 +156,16 @@ func update_hand_ui():
 	for i in range(card_buttons.size()):
 		var btn = card_buttons[i]
 		btn.texture_normal = coral_textures[hand[i]]
-
 		var is_selected = (i == selected_index)
 		var target_scale = Vector2(1.2, 1.2) if is_selected else Vector2(0.9, 0.9)
 		var target_color = Color.WHITE if is_selected else Color(0.5, 0.5, 0.5)
-
 		var tween = create_tween().set_parallel(true)
 		tween.tween_property(btn, "scale", target_scale, 0.15) \
 			.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 		tween.tween_property(btn, "modulate", target_color, 0.15)
-
+		
+		
+		
 func update_cursor_to_selection():
 	current_coral = hand[selected_index]
 	cursor_sprite.texture = coral_textures[current_coral]
@@ -183,15 +202,13 @@ func get_hovered_tile() -> Vector2i:
 func is_valid_placement(coords: Vector2i) -> bool:
 	if coords.x < 0 or coords.x >= WIDTH or coords.y < 0 or coords.y >= HEIGHT:
 		return false
-	var terrain = terrain_tilemap.get_cell_source_id(coords)
-	if terrain == DEEP_SEA_SOURCE or terrain == -1:
-		return false
 	if coral_grid.has(coords):
 		return false
-	if pollution_grid.has(coords):  
+	if pollution_grid.has(coords):
 		return false
 	return true
-
+	
+	
 func try_place_coral(coords: Vector2i):
 	if not is_valid_placement(coords):
 		print("Invalid placement at ", coords)
@@ -244,14 +261,16 @@ func get_spread_budget(coords: Vector2i, type: int) -> int:
 
 func place_coral(coords: Vector2i, type: int):
 	var sprite = Sprite2D.new()
-	sprite.texture = coral_textures[type]
+	var variants = coral_tile_variants[type]
+	sprite.texture = variants.pick_random() if variants.size() > 0 else coral_textures[type]
 	sprite.position = terrain_tilemap.map_to_local(coords)
+	sprite.position += Vector2(randf_range(-20, 20), randf_range(-20, 20)) 
+	sprite.rotation = randf_range(-0.4, 0.4)        
+	sprite.flip_h = randf() < 0.5                  
+	var s = randf_range(1.05, 1.25)
+	sprite.scale = Vector2(s, s)                     
 	terrain_tilemap.add_child(sprite)
-	sprite.scale = Vector2.ZERO
-	var tween = create_tween()
-	tween.tween_property(sprite, "scale", Vector2.ONE, 0.2).set_trans(Tween.TRANS_BACK)
 	coral_grid[coords] = { "type": type, "sprite": sprite, "health": CORAL_HEALTH[type] }
-	
 	
 	
 func spawn_pollution(count: int):
@@ -260,11 +279,8 @@ func spawn_pollution(count: int):
 	while placed < count and attempts < 1000:
 		attempts += 1
 		var c = Vector2i(randi() % WIDTH, randi() % HEIGHT)
-		var terrain = terrain_tilemap.get_cell_source_id(c)
-		if terrain == DEEP_SEA_SOURCE or terrain == -1:
-			continue          # not on deep sea / empty
 		if pollution_grid.has(c):
-			continue          # not on an existing source
+			continue
 		pollute_tile(c)
 		placed += 1
 
@@ -301,14 +317,11 @@ func advance_pollution():
 func can_pollute(coords: Vector2i) -> bool:
 	if coords.x < 0 or coords.x >= WIDTH or coords.y < 0 or coords.y >= HEIGHT:
 		return false
-	var terrain = terrain_tilemap.get_cell_source_id(coords)
-	if terrain == DEEP_SEA_SOURCE or terrain == -1:
-		return false
 	if pollution_grid.has(coords):
-		return false 
-	return true    
-
-
+		return false
+	return true
+	
+	
 func damage_coral(coords: Vector2i):
 	coral_grid[coords]["health"] -= 1
 	if coral_grid[coords]["health"] <= 0:
@@ -326,23 +339,20 @@ func kill_coral(coords: Vector2i):
 
 func pollute_tile(coords: Vector2i):
 	var sprite = Sprite2D.new()
-	sprite.texture = pollution_texture
+	sprite.texture = pollution_textures.pick_random()
 	sprite.position = terrain_tilemap.map_to_local(coords)
+	sprite.position += Vector2(randf_range(-25, 25), randf_range(-25, 25)) 
+	sprite.rotation = randf() * TAU                
+	var s = randf_range(1.1, 1.35)
+	sprite.scale = Vector2(s, s)                    
+	sprite.modulate.a = 0.9                        
+	sprite.z_index = 1                     
 	terrain_tilemap.add_child(sprite)
-	sprite.scale = Vector2.ZERO
-	var tween = create_tween()
-	tween.tween_property(sprite, "scale", Vector2.ONE, 0.2).set_trans(Tween.TRANS_BACK)
 	pollution_grid[coords] = { "sprite": sprite }
 	
 	
 func count_growable():
-	total_growable = 0
-	for y in range(HEIGHT):
-		for x in range(WIDTH):
-			var t = terrain_tilemap.get_cell_source_id(Vector2i(x, y))
-			if t == SAND_SOURCE or t == ROCK_SOURCE:
-				total_growable += 1
-
+	total_growable = WIDTH * HEIGHT
 
 func get_coral_coverage() -> float:
 	if total_growable == 0:
@@ -401,15 +411,20 @@ func get_rating() -> String:
 		return "Bronze"
 
 func update_hud():
-	coral_label.text = "Coral: %d%%" % int(round(get_coral_coverage() * 100))
-	pollution_label.text = "Pollution: %d%%" % int(round(get_pollution_coverage() * 100))
-	turn_label.text = "Turn: %d" % turn_count
 	race_bar.set_values(get_coral_coverage(), get_pollution_coverage())
 
+var instructions_overlay: Control = null
+
 func _on_info_button_pressed() -> void:
-	get_tree().change_scene_to_file("res://scenes/screens/instructions_screen.tscn")
-
-
+	if is_instance_valid(instructions_overlay):
+		return
+	get_tree().paused = true
+	instructions_overlay = preload("res://scenes/screens/instructions_screen.tscn").instantiate()
+	instructions_overlay.process_mode = Node.PROCESS_MODE_ALWAYS
+	instructions_overlay.z_index = 1000      
+	add_child(instructions_overlay)
+	
+	
 func spawn_fish(count: int = 2):
 	if fish_texture == null:
 		return
