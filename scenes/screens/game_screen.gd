@@ -4,23 +4,27 @@ extends Control
 @onready var terrain_tilemap = $BoardMask/TerrainTileMap
 
 const DEEP_SEA_SOURCE = 4
-const ROCK_SOURCE = 6
+const ROCK_SOURCE = 9
 const SAND_SOURCE = 5
-
-
 const WIDTH = 15
 const HEIGHT = 15
+
+
 const HAND_SIZE := 3
 const RECLAIM_NEIGHBOURS := 3 
 const RECLAIM_CHANCE := 0.6
 const CORAL_SPREAD_CHANCE := 0.6   
 const POLLUTION_SPREAD_CHANCE := 0.5
 const LOW_TILES_WARNING := 3
+
+
 var warning_label: Label
 var hand: Array = []         
 var selected_index: int = 0    
 var card_buttons: Array = []   
 var just_placed = null
+
+
 @onready var hand_panel: HBoxContainer = %HandPanel
 
 const ORTHOGONAL_DIRS := [Vector2i.UP, Vector2i.DOWN, Vector2i.LEFT, Vector2i.RIGHT]
@@ -30,6 +34,24 @@ enum Coral { BRANCHING, BRAIN, FAN }
 const CORAL_HEALTH := { Coral.BRANCHING: 2, Coral.FAN: 3, Coral.BRAIN: 4 }
 const POLLUTION_RATE := 1  
 const CORAL_SUPPRESSION := 0.25 
+
+const STATUS_MESSAGES := {
+	"warn": ["look carefully for empty spaces on the reef - including ones on the rocks."],
+	"winning_big": ["the reef is thriving, you're almost there!",
+		"life is winning! just a little more and the reef is saved."],
+	"danger": ["the reef is in danger, surround the pollution to push it back!",
+		"don't give up, wall it off and reclaim your reef!"],
+	"losing": ["pollution is gaining ground - fight back!",
+		"the tide's against you, but the reef can recover. keep going!"],
+	"winning": ["the coral is spreading beautifully - keep it up!",
+		"life is taking hold across the seabed. push onward!"],
+	"start": ["click to choose a coral from the toolbox and start spreading life across the reef."],
+	"close": ["it's neck and neck - every coral counts!",
+		"too close to call! make every placement matter."],
+}
+
+var current_status_key := ""
+var current_status_text := ""
 
 @export var branching_texture: Texture2D
 @export var brain_texture: Texture2D
@@ -148,7 +170,7 @@ func build_hand_ui():
 		var btn := TextureButton.new()
 		btn.ignore_texture_size = true
 		btn.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
-		btn.custom_minimum_size = Vector2(120, 120)
+		btn.custom_minimum_size = Vector2(90, 90)
 		btn.pivot_offset = btn.custom_minimum_size / 2 
 		btn.pressed.connect(_on_card_pressed.bind(i))
 		hand_panel.add_child(btn)
@@ -175,18 +197,35 @@ func count_empty_tiles() -> int:
 func setup_warning_label():
 	warning_label = Label.new()
 	warning_label.text = "look carefully for empty spaces on the reef — including ones on the rocks."
-	warning_label.add_theme_font_size_override("font_size", 28)
 	warning_label.add_theme_font_override("font", load("res://fonts/garet-book.ttf"))
+	warning_label.add_theme_font_size_override("font_size", 20)
+	warning_label.add_theme_color_override("font_color", Color.WHITE)
+
+	var box = StyleBoxFlat.new()
+	box.bg_color = Color(0.85, 0.85, 0.85)  
+	box.set_corner_radius_all(12)
+	box.content_margin_left = 20
+	box.content_margin_right = 20
+	box.content_margin_top = 12
+	box.content_margin_bottom = 12
+	warning_label.add_theme_stylebox_override("normal", box)
+	warning_label.add_theme_color_override("font_color", Color("#24183d")) 
+
 	warning_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	warning_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	warning_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	warning_label.z_index = 200                        # above the board sprites
+	warning_label.mouse_filter = Control.MOUSE_FILTER_IGNORE   # don't swallow clicks
+	warning_label.z_index = 200
+
+	# sit it in the bottom strip, centred between the toolbox and the bars
 	var vp = get_viewport_rect().size
-	warning_label.position = Vector2(40, 170)          # in the top strip; nudge to taste
-	warning_label.size = Vector2(vp.x - 80, 90)
+	var box_width = 480.0
+	warning_label.size = Vector2(box_width, 80)
+	warning_label.position = Vector2((vp.x - box_width) / 2.0, vp.y - 165)
+
 	warning_label.visible = false
 	add_child(warning_label)
-		
-		
+	
 func update_cursor_to_selection():
 	current_coral = hand[selected_index]
 	cursor_sprite.texture = coral_textures[current_coral]
@@ -268,7 +307,7 @@ func spread_coral():
 				targets.append(coords + dir)
 		targets.shuffle()
 		for i in range(min(budget, targets.size())):
-			place_coral(targets[i], type)
+			place_coral(targets[i], type, grew * 0.04)
 			grew += 1
 	just_placed = null   # cleared so it spreads normally next turn
 	if grew > 0:
@@ -286,19 +325,27 @@ func get_spread_budget(coords: Vector2i, type: int) -> int:
 		budget += 2
 	return budget
 
-func place_coral(coords: Vector2i, type: int):
+func place_coral(coords: Vector2i, type: int, delay: float = 0.0):
 	var sprite = Sprite2D.new()
 	var variants = coral_tile_variants[type]
 	sprite.texture = variants.pick_random() if variants.size() > 0 else coral_textures[type]
 	sprite.position = terrain_tilemap.map_to_local(coords)
-	sprite.position += Vector2(randf_range(-20, 20), randf_range(-20, 20)) 
-	sprite.rotation = randf_range(-0.4, 0.4)        
-	sprite.flip_h = randf() < 0.5                  
+	sprite.position += Vector2(randf_range(-20, 20), randf_range(-20, 20))
+	sprite.rotation = randf_range(-0.4, 0.4)
+	sprite.flip_h = randf() < 0.5
 	var s = randf_range(1.05, 1.25)
-	sprite.scale = Vector2(s, s)                     
+	var final_scale = Vector2(s, s)
+	sprite.scale = Vector2.ZERO          # start at nothing, then pop in
 	terrain_tilemap.add_child(sprite)
 	coral_grid[coords] = { "type": type, "sprite": sprite, "health": CORAL_HEALTH[type] }
-	
+
+	var tween = sprite.create_tween()
+	if delay > 0.0:
+		tween.tween_interval(delay)       # wait its turn in the ripple
+	tween.tween_property(sprite, "scale", final_scale, 0.3) \
+		.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+		
+		
 	
 func spawn_pollution(count: int):
 	var placed = 0
@@ -328,7 +375,7 @@ func count_coral_neighbours(coords: Vector2i) -> int:
 
 func advance_pollution():
 	var sources = pollution_grid.keys()
-	var damaged_this_turn := {}        # each coral takes at most one hit per turn
+	var spread_count = 0
 	for coords in sources:
 		var choked = randf() < count_coral_neighbours(coords) * CORAL_SUPPRESSION
 		var spreads = (not choked) and randf() < POLLUTION_SPREAD_CHANCE
@@ -337,11 +384,12 @@ func advance_pollution():
 			if not can_pollute(n):
 				continue
 			if coral_grid.has(n):
-				if not damaged_this_turn.has(n):
-					damaged_this_turn[n] = true
-					damage_coral(n)
+				damage_coral(n)        # still gnaws at adjacent coral every turn
 			elif spreads:
-				pollute_tile(n)
+				pollute_tile(n, spread_count * 0.06)
+				spread_count += 1
+				
+				
 func can_pollute(coords: Vector2i) -> bool:
 	if coords.x < 0 or coords.x >= WIDTH or coords.y < 0 or coords.y >= HEIGHT:
 		return false
@@ -365,20 +413,26 @@ func kill_coral(coords: Vector2i):
 	pollute_tile(coords)  
 
 
-func pollute_tile(coords: Vector2i):
+func pollute_tile(coords: Vector2i, delay: float = 0.0):
 	var sprite = Sprite2D.new()
 	sprite.texture = pollution_textures.pick_random()
 	sprite.position = terrain_tilemap.map_to_local(coords)
-	sprite.position += Vector2(randf_range(-25, 25), randf_range(-25, 25)) 
-	sprite.rotation = randf() * TAU                
+	sprite.position += Vector2(randf_range(-25, 25), randf_range(-25, 25))
+	sprite.rotation = randf() * TAU
 	var s = randf_range(1.1, 1.35)
-	sprite.scale = Vector2(s, s)                    
-	sprite.modulate.a = 0.9                        
-	sprite.z_index = 1                     
+	var final_scale = Vector2(s, s)
+	sprite.z_index = 1
+	sprite.scale = Vector2.ZERO          # creep out from nothing
+	sprite.modulate.a = 0.0              # and seep in from transparent
 	terrain_tilemap.add_child(sprite)
 	pollution_grid[coords] = { "sprite": sprite }
-	
-	
+
+	var tween = sprite.create_tween().set_parallel(true)
+	tween.tween_property(sprite, "scale", final_scale, 0.45) \
+		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT).set_delay(delay)
+	tween.tween_property(sprite, "modulate:a", 0.9, 0.45) \
+		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT).set_delay(delay)
+		
 func count_growable():
 	total_growable = WIDTH * HEIGHT
 
@@ -399,18 +453,20 @@ func board_is_full() -> bool:
 
 
 func check_win_loss() -> bool:
-	print(get_coral_coverage())
-	print(get_pollution_coverage())
-	
 	if get_coral_coverage() >= 0.70:
 		win()
 		return true
 	if get_pollution_coverage() >= 0.70:
 		lose()
 		return true
-		
-		
-	# Board full but neither hit 70% — decide by who covers more
+
+	# Few tiles left and coral is in the lead — call it rather than making
+	# the player hunt down the last empty squares.
+	if count_empty_tiles() <= LOW_TILES_WARNING and get_coral_coverage() > get_pollution_coverage():
+		win()
+		return true
+
+	# Board completely full but neither hit 70% — decide by who covers more
 	if board_is_full():
 		if get_coral_coverage() >= get_pollution_coverage():
 			win()
@@ -418,7 +474,6 @@ func check_win_loss() -> bool:
 			lose()
 		return true
 	return false
-	
 	
 func win():
 	GameData.last_turns = turn_count
@@ -437,11 +492,35 @@ func get_rating() -> String:
 		return "Silver"
 	else:
 		return "Bronze"
+		
+func get_status_message() -> String:
+	var c = get_coral_coverage()
+	var p = get_pollution_coverage()
+	var key := ""
+	if count_empty_tiles() <= LOW_TILES_WARNING:
+		key = "warn"
+	elif c >= 0.6:
+		key = "winning_big"
+	elif p >= 0.6:
+		key = "danger"
+	elif p > c + 0.1:
+		key = "losing"
+	elif c > p + 0.1:
+		key = "winning"
+	elif c + p < 0.08:
+		key = "start"
+	else:
+		key = "close"
+	if key != current_status_key:
+		current_status_key = key
+		current_status_text = STATUS_MESSAGES[key].pick_random()
+	return current_status_text
 
 func update_hud():
 	race_bar.set_values(get_coral_coverage(), get_pollution_coverage())
 	if warning_label:
-		warning_label.visible = count_empty_tiles() <= LOW_TILES_WARNING
+		warning_label.text = get_status_message()
+		warning_label.visible = true
 
 var instructions_overlay: Control = null
 

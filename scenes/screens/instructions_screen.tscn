@@ -3,28 +3,36 @@
 [ext_resource type="Script" uid="uid://bla3oy7h3vgd1" path="res://scenes/screens/instructions_screen.gd" id="1_fm15f"]
 [ext_resource type="FontFile" uid="uid://co6gbvl4foh1a" path="res://fonts/Matcha Cih.ttf" id="2_5s0pw"]
 [ext_resource type="FontFile" uid="uid://q0nk4vqg262s" path="res://fonts/Garet-Book.ttf" id="3_wrdii"]
-[ext_resource type="Texture2D" uid="uid://bopvwm2vd564r" path="res://assets/brain-coral.png" id="4_oqfav"]
+[ext_resource type="Texture2D" uid="uid://diofxspvgessw" path="res://assets/Brain_Coral-new.png" id="4_vtb3m"]
 [ext_resource type="Texture2D" uid="uid://cqhi37jfkns1f" path="res://assets/branch-coral.png" id="5_wwfgv"]
 [ext_resource type="Texture2D" uid="uid://d0k04ytgt1txv" path="res://assets/fan-coral.png" id="6_oqvn4"]
-[ext_resource type="Texture2D" uid="uid://oo5mov5terw3" path="res://assets/sand-new.png" id="7_vtb3m"]
-[ext_resource type="Texture2D" uid="uid://ddn7qg7puhc2y" path="res://assets/rock-3.png" id="8_kw0c6"]
-[ext_resource type="Texture2D" uid="uid://b7lkg3wii067a" path="res://assets/Pollution_Clouds 1.png" id="9_j3rkq"]
+[ext_resource type="Texture2D" uid="uid://bhhopy2anxsay" path="res://assets/sand-intro.png" id="7_vtb3m"]
+[ext_resource type="Texture2D" uid="uid://c0n8vn1dvbygf" path="res://assets/rock-transparentbg.png" id="8_vtb3m"]
+[ext_resource type="Texture2D" uid="uid://csxx2b5pe600a" path="res://assets/new-clouds-1.png" id="9_kw0c6"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vtb3m"]
 content_margin_left = 24.0
 content_margin_top = 24.0
 content_margin_right = 24.0
 content_margin_bottom = 24.0
+bg_color = Color(0.1254902, 0.4862745, 0.6, 0.54509807)
 corner_radius_top_left = 16
 corner_radius_top_right = 16
 corner_radius_bottom_right = 16
 corner_radius_bottom_left = 16
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kw0c6"]
+bg_color = Color(0.1254902, 0.4862745, 0.6, 0.7882353)
 corner_radius_top_left = 16
 corner_radius_top_right = 16
 corner_radius_bottom_right = 16
 corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_vtb3m"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_j3rkq"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_kw0c6"]
 
 [node name="InstructionsScreen" type="Control" unique_id=553287576]
 layout_mode = 3
@@ -139,7 +147,7 @@ alignment = 1
 layout_mode = 2
 theme_override_fonts/font = ExtResource("2_5s0pw")
 theme_override_font_sizes/font_size = 28
-text = "Growth: ★★★☆☆
+text = "Support: ★★★☆☆
 "
 horizontal_alignment = 1
 
@@ -147,7 +155,7 @@ horizontal_alignment = 1
 layout_mode = 2
 theme_override_fonts/font = ExtResource("2_5s0pw")
 theme_override_font_sizes/font_size = 28
-text = "Growth: ★★★★★
+text = "Support: ★★★★★
 "
 horizontal_alignment = 1
 
@@ -155,7 +163,7 @@ horizontal_alignment = 1
 layout_mode = 2
 theme_override_fonts/font = ExtResource("2_5s0pw")
 theme_override_font_sizes/font_size = 28
-text = "Growth: ☆☆☆☆☆
+text = "Support: ☆☆☆☆☆
 "
 horizontal_alignment = 1
 
@@ -230,7 +238,7 @@ alignment = 1
 
 [node name="Sprite2D" type="TextureRect" parent="Panel/HBoxContainer" unique_id=1899676226]
 layout_mode = 2
-texture = ExtResource("4_oqfav")
+texture = ExtResource("4_vtb3m")
 
 [node name="Sprite2D2" type="TextureRect" parent="Panel/HBoxContainer" unique_id=1641207312]
 layout_mode = 2
@@ -336,11 +344,11 @@ texture = ExtResource("7_vtb3m")
 [node name="TextureRect" type="TextureRect" parent="HBoxContainer" unique_id=2030523410]
 layout_mode = 2
 size_flags_horizontal = 4
-texture = ExtResource("8_kw0c6")
+texture = ExtResource("8_vtb3m")
 
 [node name="TextureRect3" type="TextureRect" parent="HBoxContainer" unique_id=472857937]
 layout_mode = 2
-texture = ExtResource("9_j3rkq")
+texture = ExtResource("9_kw0c6")
 
 [node name="Button2" type="Button" parent="." unique_id=1286675832]
 layout_mode = 1
@@ -349,10 +357,10 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -582.0
-offset_top = -151.0
-offset_right = 589.0
-offset_bottom = -44.0
+offset_left = -580.0
+offset_top = -221.0
+offset_right = 591.0
+offset_bottom = -114.0
 grow_horizontal = 2
 grow_vertical = 0
 theme_override_colors/font_color = Color(0.875, 0.875, 0.875, 1)
@@ -365,16 +373,20 @@ theme_override_font_sizes/font_size = 40
 theme_override_styles/normal = SubResource("StyleBoxFlat_vtb3m")
 theme_override_styles/hover = SubResource("StyleBoxFlat_kw0c6")
 action_mode = 0
-text = "let's grow"
+text = "let's grow →"
 
-[node name="Label" type="Label" parent="." unique_id=1250021365]
+[node name="Button" type="Button" parent="." unique_id=1708902796]
 layout_mode = 0
-offset_left = 62.0
-offset_top = 1453.0
-offset_right = 1320.0
-offset_bottom = 1506.0
+offset_left = 25.0
+offset_top = 15.0
+offset_right = 173.0
+offset_bottom = 88.0
 theme_override_fonts/font = ExtResource("3_wrdii")
-theme_override_font_sizes/font_size = 36
-text = "click to choose a coral from your toolbox and place it on the seabed."
+theme_override_font_sizes/font_size = 24
+theme_override_styles/normal = SubResource("StyleBoxTexture_vtb3m")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_j3rkq")
+theme_override_styles/hover = SubResource("StyleBoxTexture_kw0c6")
+text = "go back"
 
 [connection signal="pressed" from="Button2" to="." method="_on_button_pressed"]
+[connection signal="pressed" from="Button" to="." method="_on_back_button_pressed"]

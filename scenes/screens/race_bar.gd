@@ -6,9 +6,9 @@ var pollution_target := 0.0
 var coral_shown := 0.0
 var pollution_shown := 0.0
 
-const CORAL_COLOR := Color(0.95, 0.55, 0.4)      # warm coral
-const POLLUTION_COLOR := Color(0.45, 0.55, 0.5)  # murky
-const BG_COLOR := Color(0.1, 0.12, 0.15)
+const CORAL_COLOR := Color(0.95, 0.55, 0.4)     
+const POLLUTION_COLOR := Color(0.45, 0.55, 0.5)
+const BG_COLOR := Color(0.85, 0.85, 0.85) 
 const LINE_COLOR := Color(1, 1, 1, 0.85)
 
 func set_values(coral_coverage: float, pollution_coverage: float):

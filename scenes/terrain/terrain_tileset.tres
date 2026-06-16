@@ -5,7 +5,7 @@
 [ext_resource type="Texture2D" uid="uid://oo5mov5terw3" path="res://assets/sand-new.png" id="3_72dmc"]
 [ext_resource type="Texture2D" uid="uid://bqmjsmikhp54k" path="res://assets/sea_sheet.png" id="4_qqvaa"]
 [ext_resource type="Texture2D" uid="uid://dma35bk3uuap8" path="res://assets/sand_sheet.png" id="5_cqfkt"]
-[ext_resource type="Texture2D" uid="uid://p7lbsp20ood0" path="res://assets/rock_sheet.png" id="6_44q3d"]
+[ext_resource type="Texture2D" uid="uid://bker8nkx3460t" path="res://assets/new-rock-sheet2.png" id="6_qqvaa"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_72dmc"]
 texture = ExtResource("1_72dmc")
@@ -35,8 +35,8 @@ texture_region_size = Vector2i(256, 256)
 0:0/0 = 0
 1:0/0 = 0
 
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_kkprq"]
-texture = ExtResource("6_44q3d")
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_qqvaa"]
+texture = ExtResource("6_qqvaa")
 texture_region_size = Vector2i(256, 256)
 0:0/0 = 0
 1:0/0 = 0
@@ -49,4 +49,4 @@ sources/1 = SubResource("TileSetAtlasSource_d2qxt")
 sources/0 = SubResource("TileSetAtlasSource_72dmc")
 sources/4 = SubResource("TileSetAtlasSource_kqgu1")
 sources/5 = SubResource("TileSetAtlasSource_22h3r")
-sources/6 = SubResource("TileSetAtlasSource_kkprq")
+sources/9 = SubResource("TileSetAtlasSource_qqvaa")

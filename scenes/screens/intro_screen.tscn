@@ -8,20 +8,22 @@
 bg_color = Color(0.45882353, 0.59607846, 0.6, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_blep5"]
-content_margin_left = 24.0
-content_margin_top = 24.0
-content_margin_right = 24.0
-content_margin_bottom = 24.0
-corner_radius_top_left = 16
-corner_radius_top_right = 16
-corner_radius_bottom_right = 16
-corner_radius_bottom_left = 16
+content_margin_left = 48.0
+content_margin_top = 48.0
+content_margin_right = 48.0
+content_margin_bottom = 48.0
+bg_color = Color(0.1254902, 0.4862745, 0.6, 0.54509807)
+corner_radius_top_left = 48
+corner_radius_top_right = 48
+corner_radius_bottom_right = 48
+corner_radius_bottom_left = 48
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vw2cb"]
-corner_radius_top_left = 16
-corner_radius_top_right = 16
-corner_radius_bottom_right = 16
-corner_radius_bottom_left = 16
+bg_color = Color(0.1254902, 0.4862745, 0.6, 0.7882353)
+corner_radius_top_left = 48
+corner_radius_top_right = 48
+corner_radius_bottom_right = 48
+corner_radius_bottom_left = 48
 
 [node name="IntroScreen" type="Control" unique_id=1635084721]
 layout_mode = 3
@@ -64,10 +66,10 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -225.0
-offset_top = -366.0
-offset_right = 225.0
-offset_bottom = -216.0
+offset_left = -359.5
+offset_top = -430.0
+offset_right = 359.5
+offset_bottom = -232.0
 grow_horizontal = 2
 grow_vertical = 0
 theme_override_colors/font_color = Color(0.875, 0.875, 0.875, 1)
@@ -80,7 +82,7 @@ theme_override_font_sizes/font_size = 70
 theme_override_styles/normal = SubResource("StyleBoxFlat_blep5")
 theme_override_styles/hover = SubResource("StyleBoxFlat_vw2cb")
 action_mode = 0
-text = "save the ocean"
+text = "save the ocean →"
 
 [node name="Label2" type="Label" parent="Panel" unique_id=1478129584]
 layout_mode = 1

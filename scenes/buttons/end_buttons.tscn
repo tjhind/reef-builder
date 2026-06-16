@@ -8,16 +8,22 @@ default_font = ExtResource("1_s773y")
 default_font_size = 50
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_s773y"]
-content_margin_left = 30.0
-content_margin_top = 30.0
-content_margin_right = 30.0
-content_margin_bottom = 30.0
+content_margin_left = 18.0
+content_margin_top = 18.0
+content_margin_right = 18.0
+content_margin_bottom = 18.0
 corner_radius_top_left = 16
 corner_radius_top_right = 16
 corner_radius_bottom_right = 16
 corner_radius_bottom_left = 16
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bj7cl"]
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ty0vx"]
 
 [node name="EndButtons" type="HBoxContainer" unique_id=689516588]
 offset_left = 485.0
@@ -32,13 +38,16 @@ script = ExtResource("1_rrvbl")
 
 [node name="RestartButton" type="Button" parent="." unique_id=639348064]
 layout_mode = 2
+theme_override_font_sizes/font_size = 30
 theme_override_styles/normal = SubResource("StyleBoxFlat_s773y")
 theme_override_styles/hover = SubResource("StyleBoxFlat_bj7cl")
 text = "Restart"
 
 [node name="QuitButton" type="Button" parent="." unique_id=567341814]
 layout_mode = 2
+theme_override_font_sizes/font_size = 30
 theme_override_styles/normal = SubResource("StyleBoxFlat_s773y")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_ty0vx")
 theme_override_styles/hover = SubResource("StyleBoxFlat_bj7cl")
 text = "Quit"
 

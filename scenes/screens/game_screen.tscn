@@ -3,23 +3,27 @@
 [ext_resource type="Script" uid="uid://c1hgdu24bb1x0" path="res://scenes/screens/game_screen.gd" id="1_5wjna"]
 [ext_resource type="TileSet" uid="uid://ijr8fq7u5o2b" path="res://scenes/terrain/terrain_tileset.tres" id="2_beu7v"]
 [ext_resource type="Texture2D" uid="uid://cw871ih2j3qux" path="res://assets/branch-coral-tile.png" id="2_riit4"]
-[ext_resource type="Texture2D" uid="uid://cf8fj76b3fvb2" path="res://assets/brain-coral-tile.png" id="3_wvjml"]
+[ext_resource type="Texture2D" uid="uid://diofxspvgessw" path="res://assets/Brain_Coral-new.png" id="3_0qj6w"]
 [ext_resource type="Texture2D" uid="uid://cmblf8sgs20v2" path="res://assets/fan-coral-tile.png" id="4_xi1he"]
 [ext_resource type="Texture2D" uid="uid://cqhi37jfkns1f" path="res://assets/branch-coral.png" id="5_l8upr"]
-[ext_resource type="Texture2D" uid="uid://bopvwm2vd564r" path="res://assets/brain-coral.png" id="6_cbsd3"]
 [ext_resource type="Texture2D" uid="uid://d2d2bxnrr6n5f" path="res://assets/nemo-fish.png" id="6_d7q35"]
-[ext_resource type="Texture2D" uid="uid://gvplar7xikrw" path="res://assets/pollution-clouds.png" id="7_5aqvp"]
 [ext_resource type="Script" uid="uid://dfkxqlwo8d85m" path="res://scenes/screens/info_button.gd" id="7_ac6br"]
 [ext_resource type="Texture2D" uid="uid://d0k04ytgt1txv" path="res://assets/fan-coral.png" id="7_r0cfc"]
-[ext_resource type="Texture2D" uid="uid://b7lkg3wii067a" path="res://assets/Pollution_Clouds 1.png" id="8_ouacg"]
-[ext_resource type="Texture2D" uid="uid://il73r4u67137" path="res://assets/Pollution_Clouds 2.png" id="9_lvgud"]
+[ext_resource type="Texture2D" uid="uid://csxx2b5pe600a" path="res://assets/new-clouds-1.png" id="8_0qj6w"]
+[ext_resource type="Texture2D" uid="uid://dgxyefmga1cvy" path="res://assets/new-clouds-2.png" id="9_gophl"]
 [ext_resource type="Script" uid="uid://bp4s8qkjff0l0" path="res://scenes/screens/race_bar.gd" id="10_ac6br"]
-[ext_resource type="Texture2D" uid="uid://x88601jsi6ep" path="res://assets/Pollution_Clouds 3.png" id="10_c8aqn"]
-[ext_resource type="Texture2D" uid="uid://dfv80p7o258tw" path="res://assets/Pollution_Clouds 4.png" id="11_0qj6w"]
-[ext_resource type="Texture2D" uid="uid://nfn3tgol2dqy" path="res://assets/Pollution_Clouds.png" id="12_gophl"]
+[ext_resource type="Texture2D" uid="uid://dh5d56bupn3qb" path="res://assets/new-clouds-3.png" id="10_jdf3c"]
+[ext_resource type="Texture2D" uid="uid://sq3ecjoqcl3q" path="res://assets/new-clouds-4.png" id="11_158if"]
+[ext_resource type="Texture2D" uid="uid://ctwinham33tol" path="res://assets/new-clouds.png" id="12_qj0wo"]
+[ext_resource type="Texture2D" uid="uid://db0il1pyrbrpt" path="res://assets/clouds-new-2.png" id="14_0qj6w"]
 [ext_resource type="FontFile" uid="uid://q0nk4vqg262s" path="res://fonts/Garet-Book.ttf" id="15_c8aqn"]
 [ext_resource type="Script" uid="uid://dwsc674btr51y" path="res://scenes/screens/board_mask.gd" id="17_lvgud"]
 [ext_resource type="FontFile" uid="uid://co6gbvl4foh1a" path="res://fonts/Matcha Cih.ttf" id="20_0qj6w"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_c8aqn"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_0qj6w"]
+draw_center = false
 
 [node name="GameScreen" type="Control" unique_id=1897142186]
 layout_mode = 3
@@ -31,14 +35,14 @@ grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("1_5wjna")
 branching_texture = ExtResource("2_riit4")
-brain_texture = ExtResource("3_wvjml")
+brain_texture = ExtResource("3_0qj6w")
 fan_texture = ExtResource("4_xi1he")
 branching_tiles = Array[Texture2D]([ExtResource("5_l8upr")])
-brain_tiles = Array[Texture2D]([ExtResource("6_cbsd3")])
+brain_tiles = Array[Texture2D]([ExtResource("3_0qj6w")])
 fan_tiles = Array[Texture2D]([ExtResource("7_r0cfc")])
-pollution_textures = Array[Texture2D]([ExtResource("8_ouacg"), ExtResource("9_lvgud"), ExtResource("10_c8aqn"), ExtResource("11_0qj6w"), ExtResource("12_gophl")])
+pollution_textures = Array[Texture2D]([ExtResource("8_0qj6w"), ExtResource("9_gophl"), ExtResource("10_jdf3c"), ExtResource("11_158if"), ExtResource("12_qj0wo")])
 fish_texture = ExtResource("6_d7q35")
-pollution_cloud_texture = ExtResource("7_5aqvp")
+pollution_cloud_texture = ExtResource("14_0qj6w")
 
 [node name="ColorRect" type="ColorRect" parent="." unique_id=1853255972]
 layout_mode = 1
@@ -50,6 +54,16 @@ grow_vertical = 2
 mouse_filter = 2
 color = Color(0.45882353, 0.59607846, 0.6, 1)
 
+[node name="Label2" type="Label" parent="ColorRect" unique_id=243160848]
+layout_mode = 0
+offset_left = 109.0
+offset_top = 1504.0
+offset_right = 265.0
+offset_bottom = 1563.0
+theme_override_fonts/font = ExtResource("15_c8aqn")
+theme_override_font_sizes/font_size = 40
+text = "toolbox"
+
 [node name="InfoButton" type="Button" parent="." unique_id=247753711]
 layout_mode = 1
 anchors_preset = 3
@@ -57,12 +71,16 @@ anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -95.0
-offset_top = -72.0
+offset_left = -1344.0
+offset_top = -1701.0
+offset_right = -1231.0
+offset_bottom = -1625.0
 grow_horizontal = 0
 grow_vertical = 0
 theme_override_fonts/font = ExtResource("15_c8aqn")
-theme_override_font_sizes/font_size = 46
+theme_override_font_sizes/font_size = 30
+theme_override_styles/normal = SubResource("StyleBoxTexture_c8aqn")
+theme_override_styles/hover = SubResource("StyleBoxTexture_0qj6w")
 text = "help"
 script = ExtResource("7_ac6br")
 
@@ -74,10 +92,10 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -541.0
-offset_top = -128.0
-offset_right = -342.0
-offset_bottom = -50.0
+offset_left = -591.0
+offset_top = -126.0
+offset_right = -392.0
+offset_bottom = -48.0
 grow_horizontal = 2
 grow_vertical = 0
 
@@ -89,10 +107,10 @@ anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -389.0
-offset_top = -199.0
-offset_right = -64.0
-offset_bottom = -122.0
+offset_left = -303.0
+offset_top = -136.0
+offset_right = -66.0
+offset_bottom = -56.0
 grow_horizontal = 0
 grow_vertical = 0
 mouse_filter = 2
@@ -124,12 +142,12 @@ horizontal_alignment = 1
 
 [node name="Label2" type="Label" parent="." unique_id=835301714]
 layout_mode = 0
-offset_left = 109.0
-offset_top = 1504.0
-offset_right = 265.0
-offset_bottom = 1563.0
+offset_left = 1061.0
+offset_top = 1501.0
+offset_right = 1244.0
+offset_bottom = 1560.0
 theme_override_fonts/font = ExtResource("15_c8aqn")
 theme_override_font_sizes/font_size = 40
-text = "toolbox"
+text = "progress"
 
 [connection signal="pressed" from="InfoButton" to="." method="_on_info_button_pressed"]
