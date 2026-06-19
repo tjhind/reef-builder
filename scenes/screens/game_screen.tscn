@@ -19,6 +19,10 @@
 [ext_resource type="FontFile" uid="uid://q0nk4vqg262s" path="res://fonts/Garet-Book.ttf" id="15_c8aqn"]
 [ext_resource type="Script" uid="uid://dwsc674btr51y" path="res://scenes/screens/board_mask.gd" id="17_lvgud"]
 [ext_resource type="FontFile" uid="uid://co6gbvl4foh1a" path="res://fonts/Matcha Cih.ttf" id="20_0qj6w"]
+[ext_resource type="AudioStream" uid="uid://buyjc5t8isvpt" path="res://music/coral-spreading.mp3" id="20_jdf3c"]
+[ext_resource type="AudioStream" uid="uid://d2m6bhi2uhmf1" path="res://music/background-music.mp3" id="21_158if"]
+[ext_resource type="Script" uid="uid://dwph3t37ytfvo" path="res://scenes/screens/background_music.gd" id="22_158if"]
+[ext_resource type="AudioStream" uid="uid://bqp7sv80vc36c" path="res://music/pollution-spreading.mp3" id="22_qj0wo"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_c8aqn"]
 
@@ -149,5 +153,16 @@ offset_bottom = 1560.0
 theme_override_fonts/font = ExtResource("15_c8aqn")
 theme_override_font_sizes/font_size = 40
 text = "progress"
+
+[node name="CoralSpreadSound" type="AudioStreamPlayer" parent="." unique_id=1349046660]
+stream = ExtResource("20_jdf3c")
+
+[node name="BackgroundMusic" type="AudioStreamPlayer" parent="." unique_id=111672042]
+stream = ExtResource("21_158if")
+autoplay = true
+script = ExtResource("22_158if")
+
+[node name="PollutionSpreadSound" type="AudioStreamPlayer" parent="." unique_id=1657985848]
+stream = ExtResource("22_qj0wo")
 
 [connection signal="pressed" from="InfoButton" to="." method="_on_info_button_pressed"]

@@ -1,40 +1,32 @@
 extends Control
 
-@onready var board_mask = $BoardMask
-@onready var terrain_tilemap = $BoardMask/TerrainTileMap
 
+# board/terrain
+const WIDTH = 15
+const HEIGHT = 15
 const DEEP_SEA_SOURCE = 4
 const ROCK_SOURCE = 9
 const SAND_SOURCE = 5
-const WIDTH = 15
-const HEIGHT = 15
 
-
+# tuning
 const HAND_SIZE := 3
-const RECLAIM_NEIGHBOURS := 3 
-const RECLAIM_CHANCE := 0.6
-const CORAL_SPREAD_CHANCE := 0.6   
+const CORAL_SPREAD_CHANCE := 0.6
 const POLLUTION_SPREAD_CHANCE := 0.5
+const POLLUTION_RATE := 1
+const CORAL_SUPPRESSION := 0.25
+const RECLAIM_NEIGHBOURS := 3
+const RECLAIM_CHANCE := 0.6
 const LOW_TILES_WARNING := 3
 
-
-var warning_label: Label
-var hand: Array = []         
-var selected_index: int = 0    
-var card_buttons: Array = []   
-var just_placed = null
-
-
-@onready var hand_panel: HBoxContainer = %HandPanel
-
+# directions
 const ORTHOGONAL_DIRS := [Vector2i.UP, Vector2i.DOWN, Vector2i.LEFT, Vector2i.RIGHT]
 const DIAGONAL_DIRS := [Vector2i(-1, -1), Vector2i(1, -1), Vector2i(-1, 1), Vector2i(1, 1)]
 
+# coral types
 enum Coral { BRANCHING, BRAIN, FAN }
 const CORAL_HEALTH := { Coral.BRANCHING: 2, Coral.FAN: 3, Coral.BRAIN: 4 }
-const POLLUTION_RATE := 1  
-const CORAL_SUPPRESSION := 0.25 
 
+# status messages
 const STATUS_MESSAGES := {
 	"warn": ["look carefully for empty spaces on the reef - including ones on the rocks."],
 	"winning_big": ["the reef is thriving, you're almost there!",
@@ -50,9 +42,7 @@ const STATUS_MESSAGES := {
 		"too close to call! make every placement matter."],
 }
 
-var current_status_key := ""
-var current_status_text := ""
-
+# textures (assigned in inspector)
 @export var branching_texture: Texture2D
 @export var brain_texture: Texture2D
 @export var fan_texture: Texture2D
@@ -63,21 +53,44 @@ var current_status_text := ""
 @export var fish_texture: Texture2D
 @export var pollution_cloud_texture: Texture2D
 
+# node refs
+@onready var board_mask = $BoardMask
+@onready var terrain_tilemap = $BoardMask/TerrainTileMap
+@onready var hand_panel: HBoxContainer = %HandPanel
+@onready var race_bar = %RaceBar
 
+# sound effects
+@onready var coral_sfx = $CoralSpreadSound
+@onready var pollution_sfx = $PollutionSpreadSound
 
+# runtime state 
 var coral_textures: Dictionary = {}
 var coral_tile_variants: Dictionary = {}
 var coral_types := [Coral.BRANCHING, Coral.BRAIN, Coral.FAN]
-var total_growable := 0 
-var turn_count := 0
-@onready var race_bar = %RaceBar
 
-# source of truth of the state of the board
+# source of truth for the state of the board
 var coral_grid: Dictionary = {}
-var pollution_grid: Dictionary = {}   
+var pollution_grid: Dictionary = {}
+
+var total_growable := 0
+var turn_count := 0
 
 var current_coral: int
 var cursor_sprite: Sprite2D
+
+var hand: Array = []
+var selected_index: int = 0
+var card_buttons: Array = []
+var just_placed = null
+
+var warning_label: Label
+var current_status_key := ""
+var current_status_text := ""
+
+var instructions_overlay: Control = null
+
+
+# lifecycle
 
 func _ready():
 	randomize()
@@ -88,6 +101,22 @@ func _ready():
 	spawn_pollution(1)
 	setup_warning_label()
 	update_hud()
+
+
+func _process(_delta):
+	cursor_sprite.position = get_global_mouse_position()
+	if is_valid_placement(get_hovered_tile()):
+		cursor_sprite.modulate = Color(1, 1, 1, 0.7)
+	else:
+		cursor_sprite.modulate = Color(1, 0.4, 0.4, 0.6)
+
+
+func _unhandled_input(event):
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+		try_place_coral(get_hovered_tile())
+
+
+# terrain & board
 
 func generate_terrain():
 	for y in range(HEIGHT):
@@ -106,9 +135,11 @@ func random_transform() -> int:
 		t |= TileSetAtlasSource.TRANSFORM_TRANSPOSE
 	return t
 
+
 func random_variant(source_id: int) -> Vector2i:
 	var source = terrain_tilemap.tile_set.get_source(source_id) as TileSetAtlasSource
 	return source.get_tile_id(randi() % source.get_tiles_count())
+
 
 func fit_board_to_screen():
 	var viewport = get_viewport_rect().size
@@ -130,6 +161,13 @@ func fit_board_to_screen():
 	terrain_tilemap.scale = Vector2(s, s)
 	terrain_tilemap.position = Vector2.ZERO
 
+
+func count_growable():
+	total_growable = WIDTH * HEIGHT
+
+
+# coral/hand setup
+
 func setup_coral():
 	coral_textures = {
 		Coral.BRANCHING: branching_texture,
@@ -141,13 +179,13 @@ func setup_coral():
 		Coral.BRAIN: brain_tiles,
 		Coral.FAN: fan_tiles,
 	}
-	# "ghost" sprite 
+	# "ghost" sprite
 	cursor_sprite = Sprite2D.new()
-	cursor_sprite.scale = terrain_tilemap.scale   
-	cursor_sprite.z_index = 100   
-	cursor_sprite.visible = false                   
+	cursor_sprite.scale = terrain_tilemap.scale
+	cursor_sprite.z_index = 100
+	cursor_sprite.visible = false
 	add_child(cursor_sprite)
-	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE   
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	deal_hand()
 	build_hand_ui()
 	update_cursor_to_selection()
@@ -171,7 +209,7 @@ func build_hand_ui():
 		btn.ignore_texture_size = true
 		btn.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
 		btn.custom_minimum_size = Vector2(90, 90)
-		btn.pivot_offset = btn.custom_minimum_size / 2 
+		btn.pivot_offset = btn.custom_minimum_size / 2
 		btn.pressed.connect(_on_card_pressed.bind(i))
 		hand_panel.add_child(btn)
 		card_buttons.append(btn)
@@ -189,43 +227,8 @@ func update_hand_ui():
 		tween.tween_property(btn, "scale", target_scale, 0.15) \
 			.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 		tween.tween_property(btn, "modulate", target_color, 0.15)
-		
-		
-func count_empty_tiles() -> int:
-	return total_growable - coral_grid.size() - pollution_grid.size()
 
-func setup_warning_label():
-	warning_label = Label.new()
-	warning_label.text = "look carefully for empty spaces on the reef — including ones on the rocks."
-	warning_label.add_theme_font_override("font", load("res://fonts/garet-book.ttf"))
-	warning_label.add_theme_font_size_override("font_size", 20)
-	warning_label.add_theme_color_override("font_color", Color.WHITE)
 
-	var box = StyleBoxFlat.new()
-	box.bg_color = Color(0.85, 0.85, 0.85)  
-	box.set_corner_radius_all(12)
-	box.content_margin_left = 20
-	box.content_margin_right = 20
-	box.content_margin_top = 12
-	box.content_margin_bottom = 12
-	warning_label.add_theme_stylebox_override("normal", box)
-	warning_label.add_theme_color_override("font_color", Color("#24183d")) 
-
-	warning_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	warning_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	warning_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	warning_label.mouse_filter = Control.MOUSE_FILTER_IGNORE   # don't swallow clicks
-	warning_label.z_index = 200
-
-	# sit it in the bottom strip, centred between the toolbox and the bars
-	var vp = get_viewport_rect().size
-	var box_width = 480.0
-	warning_label.size = Vector2(box_width, 80)
-	warning_label.position = Vector2((vp.x - box_width) / 2.0, vp.y - 165)
-
-	warning_label.visible = false
-	add_child(warning_label)
-	
 func update_cursor_to_selection():
 	current_coral = hand[selected_index]
 	cursor_sprite.texture = coral_textures[current_coral]
@@ -242,17 +245,8 @@ func replace_selected_card():
 	update_cursor_to_selection()
 	update_hand_ui()
 
-func _process(_delta):
-	cursor_sprite.position = get_global_mouse_position()
-	if is_valid_placement(get_hovered_tile()):
-		cursor_sprite.modulate = Color(1, 1, 1, 0.7)      
-	else:
-		cursor_sprite.modulate = Color(1, 0.4, 0.4, 0.6)  
 
-
-func _unhandled_input(event):
-	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
-		try_place_coral(get_hovered_tile())
+# input/placement
 
 func get_hovered_tile() -> Vector2i:
 	var local = terrain_tilemap.to_local(get_global_mouse_position())
@@ -267,16 +261,39 @@ func is_valid_placement(coords: Vector2i) -> bool:
 	if pollution_grid.has(coords):
 		return false
 	return true
-	
-	
+
+
 func try_place_coral(coords: Vector2i):
 	if not is_valid_placement(coords):
 		print("Invalid placement at ", coords)
 		return
 	place_coral(coords, current_coral)
-	just_placed = coords 
+	just_placed = coords
 	end_turn()
 
+
+func place_coral(coords: Vector2i, type: int, delay: float = 0.0):
+	var sprite = Sprite2D.new()
+	var variants = coral_tile_variants[type]
+	sprite.texture = variants.pick_random() if variants.size() > 0 else coral_textures[type]
+	sprite.position = terrain_tilemap.map_to_local(coords)
+	sprite.position += Vector2(randf_range(-20, 20), randf_range(-20, 20))
+	sprite.rotation = randf_range(-0.4, 0.4)
+	sprite.flip_h = randf() < 0.5
+	var s = randf_range(1.05, 1.25)
+	var final_scale = Vector2(s, s)
+	sprite.scale = Vector2.ZERO          # start at nothing, then pop in
+	terrain_tilemap.add_child(sprite)
+	coral_grid[coords] = { "type": type, "sprite": sprite, "health": CORAL_HEALTH[type] }
+
+	var tween = sprite.create_tween()
+	if delay > 0.0:
+		tween.tween_interval(delay)       # wait its turn in the ripple
+	tween.tween_property(sprite, "scale", final_scale, 0.3) \
+		.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+
+
+# turn loop
 
 func end_turn():
 	spread_coral()
@@ -287,8 +304,9 @@ func end_turn():
 	if check_win_loss():
 		return
 	replace_selected_card()
-	
-	
+
+
+# coral spread
 
 func spread_coral():
 	var sources = coral_grid.keys()
@@ -312,10 +330,11 @@ func spread_coral():
 	just_placed = null   # cleared so it spreads normally next turn
 	if grew > 0:
 		spawn_fish(2)
-		
-		
+		coral_sfx.play()
+
+
 func get_spread_budget(coords: Vector2i, type: int) -> int:
-	var budget = 1 
+	var budget = 1
 	var terrain = terrain_tilemap.get_cell_source_id(coords)
 	if terrain == SAND_SOURCE:
 		budget += 1
@@ -325,28 +344,9 @@ func get_spread_budget(coords: Vector2i, type: int) -> int:
 		budget += 2
 	return budget
 
-func place_coral(coords: Vector2i, type: int, delay: float = 0.0):
-	var sprite = Sprite2D.new()
-	var variants = coral_tile_variants[type]
-	sprite.texture = variants.pick_random() if variants.size() > 0 else coral_textures[type]
-	sprite.position = terrain_tilemap.map_to_local(coords)
-	sprite.position += Vector2(randf_range(-20, 20), randf_range(-20, 20))
-	sprite.rotation = randf_range(-0.4, 0.4)
-	sprite.flip_h = randf() < 0.5
-	var s = randf_range(1.05, 1.25)
-	var final_scale = Vector2(s, s)
-	sprite.scale = Vector2.ZERO          # start at nothing, then pop in
-	terrain_tilemap.add_child(sprite)
-	coral_grid[coords] = { "type": type, "sprite": sprite, "health": CORAL_HEALTH[type] }
 
-	var tween = sprite.create_tween()
-	if delay > 0.0:
-		tween.tween_interval(delay)       # wait its turn in the ripple
-	tween.tween_property(sprite, "scale", final_scale, 0.3) \
-		.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-		
-		
-	
+# pollution spread
+
 func spawn_pollution(count: int):
 	var placed = 0
 	var attempts = 0
@@ -365,13 +365,8 @@ func pollution_spread():
 		advance_pollution()
 	if pollution_grid.size() > before:
 		spawn_pollution_clouds(1)
-		
-func count_coral_neighbours(coords: Vector2i) -> int:
-	var count = 0
-	for dir in ORTHOGONAL_DIRS:
-		if coral_grid.has(coords + dir):
-			count += 1
-	return count
+		pollution_sfx.play()
+
 
 func advance_pollution():
 	var sources = pollution_grid.keys()
@@ -388,29 +383,37 @@ func advance_pollution():
 			elif spreads:
 				pollute_tile(n, spread_count * 0.06)
 				spread_count += 1
-				
-				
+
+
 func can_pollute(coords: Vector2i) -> bool:
 	if coords.x < 0 or coords.x >= WIDTH or coords.y < 0 or coords.y >= HEIGHT:
 		return false
 	if pollution_grid.has(coords):
 		return false
 	return true
-	
-	
+
+
+func count_coral_neighbours(coords: Vector2i) -> int:
+	var count = 0
+	for dir in ORTHOGONAL_DIRS:
+		if coral_grid.has(coords + dir):
+			count += 1
+	return count
+
+
 func damage_coral(coords: Vector2i):
 	coral_grid[coords]["health"] -= 1
 	if coral_grid[coords]["health"] <= 0:
 		kill_coral(coords)
 	else:
-		# darken survivors so damage is visible: TODO add new assets for this 
+		# darken survivors so damage is visible: TODO add new assets for this
 		coral_grid[coords]["sprite"].modulate = Color(0.7, 0.7, 0.7)
 
 
 func kill_coral(coords: Vector2i):
 	coral_grid[coords]["sprite"].queue_free()
 	coral_grid.erase(coords)
-	pollute_tile(coords)  
+	pollute_tile(coords)
 
 
 func pollute_tile(coords: Vector2i, delay: float = 0.0):
@@ -432,9 +435,42 @@ func pollute_tile(coords: Vector2i, delay: float = 0.0):
 		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT).set_delay(delay)
 	tween.tween_property(sprite, "modulate:a", 0.9, 0.45) \
 		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT).set_delay(delay)
-		
-func count_growable():
-	total_growable = WIDTH * HEIGHT
+
+
+# reclaim
+
+func reclaim_pollution():
+	# Decide all reclaims against the current board, THEN apply them, so a tile
+	# reclaimed this turn doesn't chain-reclaim its neighbours in the same turn.
+	var to_reclaim := []
+	for coords in pollution_grid.keys():
+		if count_coral_neighbours(coords) >= RECLAIM_NEIGHBOURS and randf() < RECLAIM_CHANCE:
+			to_reclaim.append(coords)
+	for coords in to_reclaim:
+		reclaim_tile(coords)
+	if to_reclaim.size() > 0:
+		spawn_fish(1)
+
+
+func reclaim_tile(coords: Vector2i):
+	pollution_grid[coords]["sprite"].queue_free()
+	pollution_grid.erase(coords)
+	# heal it over with coral, taking the type of an adjacent coral
+	place_coral(coords, get_a_coral_neighbour_type(coords))
+
+
+func get_a_coral_neighbour_type(coords: Vector2i) -> int:
+	for dir in ORTHOGONAL_DIRS:
+		if coral_grid.has(coords + dir):
+			return coral_grid[coords + dir]["type"]
+	return Coral.BRANCHING
+
+
+# win/loss
+
+func count_empty_tiles() -> int:
+	return total_growable - coral_grid.size() - pollution_grid.size()
+
 
 func get_coral_coverage() -> float:
 	if total_growable == 0:
@@ -474,7 +510,8 @@ func check_win_loss() -> bool:
 			lose()
 		return true
 	return false
-	
+
+
 func win():
 	GameData.last_turns = turn_count
 	GameData.last_rating = get_rating()
@@ -485,6 +522,7 @@ func lose():
 	GameData.last_turns = turn_count
 	get_tree().change_scene_to_file("res://scenes/screens/lose_screen.tscn")
 
+
 func get_rating() -> String:
 	if turn_count <= 15:
 		return "Gold"
@@ -492,7 +530,10 @@ func get_rating() -> String:
 		return "Silver"
 	else:
 		return "Bronze"
-		
+
+
+# ==== HUD & status ====
+
 func get_status_message() -> String:
 	var c = get_coral_coverage()
 	var p = get_pollution_coverage()
@@ -516,24 +557,49 @@ func get_status_message() -> String:
 		current_status_text = STATUS_MESSAGES[key].pick_random()
 	return current_status_text
 
+
 func update_hud():
 	race_bar.set_values(get_coral_coverage(), get_pollution_coverage())
 	if warning_label:
 		warning_label.text = get_status_message()
 		warning_label.visible = true
 
-var instructions_overlay: Control = null
 
-func _on_info_button_pressed() -> void:
-	if is_instance_valid(instructions_overlay):
-		return
-	get_tree().paused = true
-	instructions_overlay = preload("res://scenes/screens/instructions_screen.tscn").instantiate()
-	instructions_overlay.process_mode = Node.PROCESS_MODE_ALWAYS
-	instructions_overlay.z_index = 1000      
-	add_child(instructions_overlay)
-	
-	
+func setup_warning_label():
+	warning_label = Label.new()
+	warning_label.text = "look carefully for empty spaces on the reef — including ones on the rocks."
+	warning_label.add_theme_font_override("font", load("res://fonts/garet-book.ttf"))
+	warning_label.add_theme_font_size_override("font_size", 20)
+	warning_label.add_theme_color_override("font_color", Color.WHITE)
+
+	var box = StyleBoxFlat.new()
+	box.bg_color = Color(0.85, 0.85, 0.85)
+	box.set_corner_radius_all(12)
+	box.content_margin_left = 20
+	box.content_margin_right = 20
+	box.content_margin_top = 12
+	box.content_margin_bottom = 12
+	warning_label.add_theme_stylebox_override("normal", box)
+	warning_label.add_theme_color_override("font_color", Color("#24183d"))
+
+	warning_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	warning_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	warning_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	warning_label.mouse_filter = Control.MOUSE_FILTER_IGNORE   # don't swallow clicks
+	warning_label.z_index = 200
+
+	# sit it in the bottom strip, centred between the toolbox and the bars
+	var vp = get_viewport_rect().size
+	var box_width = 480.0
+	warning_label.size = Vector2(box_width, 80)
+	warning_label.position = Vector2((vp.x - box_width) / 2.0, vp.y - 165)
+
+	warning_label.visible = false
+	add_child(warning_label)
+
+
+# extra effects
+
 func spawn_fish(count: int = 2):
 	if fish_texture == null:
 		return
@@ -544,13 +610,13 @@ func spawn_fish(count: int = 2):
 		fish.z_index = 50
 		var fish_scale = randf_range(0.2, 0.45)
 		fish.scale = Vector2(fish_scale, fish_scale)
-		fish.modulate.a = lerp(0.6, 1.0, fish_scale / 0.45)  
+		fish.modulate.a = lerp(0.6, 1.0, fish_scale / 0.45)
 		add_child(fish)
 
 		var going_right = randf() < 0.5
 		var y = randf_range(viewport.y * 0.15, viewport.y * 0.85)
 		fish.position = Vector2((-200.0) if going_right else (viewport.x + 200.0), y)
-		fish.flip_h = going_right     
+		fish.flip_h = going_right
 		var end_x = (viewport.x + 200.0) if going_right else (-200.0)
 
 		var swim = fish.create_tween()
@@ -571,8 +637,8 @@ func spawn_pollution_clouds(count: int = 1):
 		var cloud = Sprite2D.new()
 		cloud.texture = pollution_cloud_texture
 		cloud.z_index = 40
-		cloud.scale = Vector2(0.5, 0.5)           
-		cloud.modulate = Color(1, 1, 1, 0.55)  
+		cloud.scale = Vector2(0.5, 0.5)
+		cloud.modulate = Color(1, 1, 1, 0.55)
 		add_child(cloud)
 
 		var y = randf_range(viewport.y * 0.1, viewport.y * 0.6)
@@ -581,30 +647,15 @@ func spawn_pollution_clouds(count: int = 1):
 		var drift = cloud.create_tween()
 		drift.tween_property(cloud, "position:x", viewport.x + 250, randf_range(9.0, 13.0))
 		drift.tween_callback(cloud.queue_free)
-		
-		
-func reclaim_pollution():
-	# Decide all reclaims against the current board, THEN apply them, so a tile
-	# reclaimed this turn doesn't chain-reclaim its neighbours in the same turn.
-	var to_reclaim := []
-	for coords in pollution_grid.keys():
-		if count_coral_neighbours(coords) >= RECLAIM_NEIGHBOURS and randf() < RECLAIM_CHANCE:
-			to_reclaim.append(coords)
-	for coords in to_reclaim:
-		reclaim_tile(coords)
-	if to_reclaim.size() > 0:
-		spawn_fish(1)  
 
 
-func reclaim_tile(coords: Vector2i):
-	pollution_grid[coords]["sprite"].queue_free()
-	pollution_grid.erase(coords)
-	# heal it over with coral, taking the type of an adjacent coral
-	place_coral(coords, get_a_coral_neighbour_type(coords))
+# instructions box
 
-
-func get_a_coral_neighbour_type(coords: Vector2i) -> int:
-	for dir in ORTHOGONAL_DIRS:
-		if coral_grid.has(coords + dir):
-			return coral_grid[coords + dir]["type"]
-	return Coral.BRANCHING
+func _on_info_button_pressed() -> void:
+	if is_instance_valid(instructions_overlay):
+		return
+	get_tree().paused = true
+	instructions_overlay = preload("res://scenes/screens/instructions_screen.tscn").instantiate()
+	instructions_overlay.process_mode = Node.PROCESS_MODE_ALWAYS
+	instructions_overlay.z_index = 1000
+	add_child(instructions_overlay)
